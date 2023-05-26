@@ -3001,10 +3001,6 @@ namespace VMT_RMG
                             var currentInventory = this.GetViewInventorys(this.CurrentBlock, this.CurrentBay);
                            if (currentInventory == null)
                                return;
-                           else if (currentInventory.Count == 0)
-                           {
-
-                           }
 
                             foreach (var inven in currentInventory)
                             {
