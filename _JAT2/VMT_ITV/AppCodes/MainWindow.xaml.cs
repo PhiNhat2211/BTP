@@ -1559,9 +1559,9 @@ namespace VMT_ITV
                                 {
                                     String message = String.Empty;
                                     if (UserInfo.gMchnTp == "TC")
-                                        message = PresentationMgr.Singleton.LanguageSer.GetResourceSC(clone.resultObj, LanguageService.MESSAGE_JOBSETERROR_GROUP);
+                                        message = PresentationMgr.Singleton.LanguageSer.GetResourceITV(clone.resultObj, LanguageService.MESSAGE_JOBSETERROR_GROUP);
                                     else
-                                        message = PresentationMgr.Singleton.LanguageSer.GetResourceSC("F16a", LanguageService.MESSAGE_JOBSETERROR_GROUP);
+                                        message = PresentationMgr.Singleton.LanguageSer.GetResourceITV("F16a", LanguageService.MESSAGE_JOBSETERROR_GROUP);
 
                                     PresentationMgr.AppWin.PopupView.ShowPopup(1,
                                     PresentationMgr.Singleton.LanguageSer.GetResourceITV("LA0152", LanguageService.LABEL_CUSTOMIZE), message
@@ -1570,7 +1570,7 @@ namespace VMT_ITV
                                 else
                                 {
                                     PresentationMgr.AppWin.PopupView.ShowPopup(1,
-                                    PresentationMgr.Singleton.LanguageSer.GetResourceITV("LA0146", LanguageService.LABEL_CUSTOMIZE), PresentationMgr.Singleton.LanguageSer.GetResourceSC(clone.resultObj, LanguageService.MESSAGE_JOBSETERROR_GROUP)
+                                    PresentationMgr.Singleton.LanguageSer.GetResourceITV("LA0146", LanguageService.LABEL_CUSTOMIZE), PresentationMgr.Singleton.LanguageSer.GetResourceITV(clone.resultObj, LanguageService.MESSAGE_JOBSETERROR_GROUP)
                                     , "", PresentationMgr.Singleton.LanguageSer.GetResourceITV("MS0034", LanguageService.MESSAGE_GROUP), "", null, 0);
                                 }                                
                             }
@@ -1607,7 +1607,7 @@ namespace VMT_ITV
                                 {
                                    String mess = PresentationMgr.Singleton.LanguageSer.GetResourceITV("FX", LanguageService.MESSAGE_LOGOUT_GROUP);
                                    PresentationMgr.AppWin.PopupView.ShowPopup(1, PresentationMgr.Singleton.LanguageSer.GetResourceITV("LA0146", LanguageService.LABEL_CUSTOMIZE), mess
-                                   , "", PresentationMgr.Singleton.LanguageSer.GetResourceSC("MS0034", LanguageService.MESSAGE_GROUP), "", null, 0);
+                                   , "", PresentationMgr.Singleton.LanguageSer.GetResourceITV("MS0034", LanguageService.MESSAGE_GROUP), "", null, 0);
                                 }
                             }
                             else
@@ -1639,13 +1639,13 @@ namespace VMT_ITV
                             if (!clone.resultTP.Equals("SUCCESS"))
                             {
                                 PresentationMgr.AppWin.PopupView.ShowPopup(1,
-                                    PresentationMgr.Singleton.LanguageSer.GetResourceITV("LA0146", LanguageService.LABEL_CUSTOMIZE), PresentationMgr.Singleton.LanguageSer.GetResourceSC(clone.resultObj, LanguageService.MESSAGE_JOBSETERROR_GROUP)
-                                    , "", PresentationMgr.Singleton.LanguageSer.GetResourceSC("MS0034", LanguageService.MESSAGE_GROUP), "", null, 0);
+                                    PresentationMgr.Singleton.LanguageSer.GetResourceITV("LA0146", LanguageService.LABEL_CUSTOMIZE), PresentationMgr.Singleton.LanguageSer.GetResourceITV(clone.resultObj, LanguageService.MESSAGE_JOBSETERROR_GROUP)
+                                    , "", PresentationMgr.Singleton.LanguageSer.GetResourceITV("MS0034", LanguageService.MESSAGE_GROUP), "", null, 0);
                             }
                             else
                             {
                                 PresentationMgr.AppWin.PopupView.ShowPopup(1,
-                                    PresentationMgr.Singleton.LanguageSer.GetResourceITV("S", LanguageService.MESSAGE_SERVER_GROUP), PresentationMgr.Singleton.LanguageSer.GetResourceSC("S1", LanguageService.MESSAGE_JOBDONE_GROUP)
+                                    PresentationMgr.Singleton.LanguageSer.GetResourceITV("S", LanguageService.MESSAGE_SERVER_GROUP), PresentationMgr.Singleton.LanguageSer.GetResourceITV("S1", LanguageService.MESSAGE_JOBDONE_GROUP)
                                     , "", PresentationMgr.Singleton.LanguageSer.GetResourceITV("MS0034", LanguageService.MESSAGE_GROUP), "", null, 0);
                             }
                             clone = null;
@@ -1668,7 +1668,7 @@ namespace VMT_ITV
                             {
                                 PresentationMgr.AppWin.PopupView.ShowPopup(1,
                                     PresentationMgr.Singleton.LanguageSer.GetResourceITV("LA0146", LanguageService.LABEL_CUSTOMIZE), (!string.IsNullOrEmpty(clone.resultObj) ? clone.resultObj.ToString() : "")
-                                    , "", PresentationMgr.Singleton.LanguageSer.GetResourceSC("MS0034", LanguageService.MESSAGE_GROUP), "", null, 0);
+                                    , "", PresentationMgr.Singleton.LanguageSer.GetResourceITV("MS0034", LanguageService.MESSAGE_GROUP), "", null, 0);
                             }
                             else //Oct 3 2019 Don't need Popup when Complete
                             {
@@ -1706,8 +1706,8 @@ namespace VMT_ITV
                             if (!clone.resultTP.Equals("SUCCESS"))
                             {
                                 PresentationMgr.AppWin.PopupView.ShowPopup(1,
-                                    PresentationMgr.Singleton.LanguageSer.GetResourceITV("LA0146", LanguageService.LABEL_CUSTOMIZE), PresentationMgr.Singleton.LanguageSer.GetResourceSC(clone.resultObj, LanguageService.MESSAGE_JOBSETERROR_GROUP)
-                                    , "", PresentationMgr.Singleton.LanguageSer.GetResourceSC("MS0034", LanguageService.MESSAGE_GROUP), "", null, 0);
+                                    PresentationMgr.Singleton.LanguageSer.GetResourceITV("LA0146", LanguageService.LABEL_CUSTOMIZE), PresentationMgr.Singleton.LanguageSer.GetResourceITV(clone.resultObj, LanguageService.MESSAGE_JOBSETERROR_GROUP)
+                                    , "", PresentationMgr.Singleton.LanguageSer.GetResourceITV("MS0034", LanguageService.MESSAGE_GROUP), "", null, 0);
                             }
                             else
                             {
@@ -1746,8 +1746,8 @@ namespace VMT_ITV
                             if (!clone.resultTP.Equals("SUCCESS"))
                             {
                                 PresentationMgr.AppWin.PopupView.ShowPopup(1,
-                                    PresentationMgr.Singleton.LanguageSer.GetResourceITV("LA0146", LanguageService.LABEL_CUSTOMIZE), PresentationMgr.Singleton.LanguageSer.GetResourceSC(clone.resultObj, LanguageService.MESSAGE_JOBSETERROR_GROUP)
-                                    , "", PresentationMgr.Singleton.LanguageSer.GetResourceSC("MS0034", LanguageService.MESSAGE_GROUP), "", null, 0);
+                                    PresentationMgr.Singleton.LanguageSer.GetResourceITV("LA0146", LanguageService.LABEL_CUSTOMIZE), PresentationMgr.Singleton.LanguageSer.GetResourceITV(clone.resultObj, LanguageService.MESSAGE_JOBSETERROR_GROUP)
+                                    , "", PresentationMgr.Singleton.LanguageSer.GetResourceITV("MS0034", LanguageService.MESSAGE_GROUP), "", null, 0);
                             }
                             else
                             {
@@ -1777,8 +1777,8 @@ namespace VMT_ITV
                             if (!clone.resultTP.Equals("SUCCESS"))
                             {
                                 PresentationMgr.AppWin.PopupView.ShowPopup(1,
-                                    PresentationMgr.Singleton.LanguageSer.GetResourceITV("LA0146", LanguageService.LABEL_CUSTOMIZE), PresentationMgr.Singleton.LanguageSer.GetResourceSC(clone.resultObj, LanguageService.MESSAGE_JOBSETERROR_GROUP)
-                                    , "", PresentationMgr.Singleton.LanguageSer.GetResourceSC("MS0034", LanguageService.MESSAGE_GROUP), "", null, 0);
+                                    PresentationMgr.Singleton.LanguageSer.GetResourceITV("LA0146", LanguageService.LABEL_CUSTOMIZE), PresentationMgr.Singleton.LanguageSer.GetResourceITV(clone.resultObj, LanguageService.MESSAGE_JOBSETERROR_GROUP)
+                                    , "", PresentationMgr.Singleton.LanguageSer.GetResourceITV("MS0034", LanguageService.MESSAGE_GROUP), "", null, 0);
                             }
                             else
                             {
@@ -1806,8 +1806,8 @@ namespace VMT_ITV
                             if (!clone.resultTP.Equals("SUCCESS"))
                             {
                                 PresentationMgr.AppWin.PopupView.ShowPopup(1,
-                                    PresentationMgr.Singleton.LanguageSer.GetResourceITV("LA0146", LanguageService.LABEL_CUSTOMIZE), PresentationMgr.Singleton.LanguageSer.GetResourceSC(clone.resultObj, LanguageService.MESSAGE_JOBSETERROR_GROUP)
-                                    , "", PresentationMgr.Singleton.LanguageSer.GetResourceSC("MS0034", LanguageService.MESSAGE_GROUP), "", null, 0);
+                                    PresentationMgr.Singleton.LanguageSer.GetResourceITV("LA0146", LanguageService.LABEL_CUSTOMIZE), PresentationMgr.Singleton.LanguageSer.GetResourceITV(clone.resultObj, LanguageService.MESSAGE_JOBSETERROR_GROUP)
+                                    , "", PresentationMgr.Singleton.LanguageSer.GetResourceITV("MS0034", LanguageService.MESSAGE_GROUP), "", null, 0);
                             }
                             else
                             { // Oct 4 2019 Don't need Popup when SetJobDoneComplete
@@ -1838,8 +1838,8 @@ namespace VMT_ITV
                             if (!clone.resultTP.Equals("SUCCESS"))
                             {
                                 PresentationMgr.AppWin.PopupView.ShowPopup(1,
-                                    PresentationMgr.Singleton.LanguageSer.GetResourceITV("LA0146", LanguageService.LABEL_CUSTOMIZE), PresentationMgr.Singleton.LanguageSer.GetResourceSC(clone.resultObj, LanguageService.MESSAGE_JOBSETERROR_GROUP)
-                                    , "", PresentationMgr.Singleton.LanguageSer.GetResourceSC("MS0034", LanguageService.MESSAGE_GROUP), "", null, 0);
+                                    PresentationMgr.Singleton.LanguageSer.GetResourceITV("LA0146", LanguageService.LABEL_CUSTOMIZE), PresentationMgr.Singleton.LanguageSer.GetResourceITV(clone.resultObj, LanguageService.MESSAGE_JOBSETERROR_GROUP)
+                                    , "", PresentationMgr.Singleton.LanguageSer.GetResourceITV("MS0034", LanguageService.MESSAGE_GROUP), "", null, 0);
                             }
                             else
                             {
