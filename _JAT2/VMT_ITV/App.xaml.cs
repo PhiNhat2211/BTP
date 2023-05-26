@@ -10,8 +10,6 @@ using System.Runtime.InteropServices;
 using VMT_Data_JAT2;
 using System.IO;
 using System.Diagnostics;
-using static Common.Util.Registry64;
-using Microsoft.Win32;
 
 namespace VMT_ITV
 {
@@ -27,24 +25,15 @@ namespace VMT_ITV
 
         public App()
         {
-            // Sep 22 2021 Change registry from CURRENT_USER to LOCAL_MACHINE
-            UIntPtr uIntPtr = GetRegUInt(HKEY_LOCAL_MACHINE, VMT_ITV.MainWindow.KeyCLTVMT_ITV);
-            if (uIntPtr.ToUInt32() > 0)
+            Microsoft.Win32.RegistryKey keyDir = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(VMT_ITV.MainWindow.KeyCLTVMT_ITV, true);
+            string strWaitingUpdate = "";
+            if (keyDir != null)
+                strWaitingUpdate = (String)keyDir.GetValue("WaitingUpdate", @"Unknown");
+            if (strWaitingUpdate.Contains("1"))            
             {
-                if (GetRegValue(uIntPtr, "WaitingUpdate").Contains("1"))
-                {
-                    TrySetRegValue(uIntPtr, "WaitingUpdate", "0");
-                }
+                //Environment.Exit(0);
+                keyDir.SetValue("WaitingUpdate", "0");
             }
-            //Microsoft.Win32.RegistryKey keyDir = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(VMT_ITV.MainWindow.KeyCLTVMT_ITV, true);
-            //string strWaitingUpdate = "";
-            //if (keyDir != null)
-            //    strWaitingUpdate = (String)keyDir.GetValue("WaitingUpdate", @"Unknown");
-            //if (strWaitingUpdate.Contains("1"))            
-            //{
-            //    //Environment.Exit(0);
-            //    keyDir.SetValue("WaitingUpdate", "0");
-            //}
 
             //ForeignInfo.GetUserLanguageType(ref ForeignInfo.languageUser);
             ForeignInfo.GetUserLanguagePath(ref ForeignInfo.languagePathUser);

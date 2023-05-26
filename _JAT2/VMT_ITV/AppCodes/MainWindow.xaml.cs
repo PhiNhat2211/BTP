@@ -27,8 +27,6 @@ using Common.Interface;
 using System.Windows.Interop;
 using System.Net.NetworkInformation;
 using System.IO;
-using Microsoft.Win32;
-using static Common.Util.Registry64;
 
 namespace VMT_ITV
 {
@@ -227,32 +225,20 @@ namespace VMT_ITV
             // TeamSelectPopup.Visibility = System.Windows.Visibility.Visible;
             // TeamSelectPopup.AddTeamList();
 
-            // Sep 22 2021 Change registry from CURRENT_USER to LOCAL_MACHINE
-            UIntPtr uIntPtr = GetRegUInt(HKEY_LOCAL_MACHINE, KeyCLTVMT_ITV);
-            if (uIntPtr.ToUInt32() > 0)
+            Microsoft.Win32.RegistryKey keyDir = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(KeyCLTVMT_ITV, true);
+            if (keyDir != null)
             {
+                String regValue = (String)keyDir.GetValue("IsFirstRun", "");
                 Version ver = Assembly.GetExecutingAssembly().GetName().Version;
-                String regValue = GetRegValue(uIntPtr, "IsFirstRun");
+
                 if (String.IsNullOrEmpty(regValue) || !regValue.Equals(ver.Revision.ToString()))
                 {
-                    TrySetRegValue(uIntPtr, "IsFirstRun", ver.ToString());
+                    keyDir.SetValue("IsFirstRun", ver.Revision.ToString(), Microsoft.Win32.RegistryValueKind.String);
+
+                    // 1 Sec
+                    //new PresentationMgr.SingleShot(1000, SystemRestart);
                 }
             }
-
-            //Microsoft.Win32.RegistryKey keyDir = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(KeyCLTVMT_ITV, true);
-            //if (keyDir != null)
-            //{
-            //    String regValue = (String)keyDir.GetValue("IsFirstRun", "");
-            //    Version ver = Assembly.GetExecutingAssembly().GetName().Version;
-
-            //    if (String.IsNullOrEmpty(regValue) || !regValue.Equals(ver.Revision.ToString()))
-            //    {
-            //        keyDir.SetValue("IsFirstRun", ver.Revision.ToString(), Microsoft.Win32.RegistryValueKind.String);
-
-            //        // 1 Sec
-            //        //new PresentationMgr.SingleShot(1000, SystemRestart);
-            //    }
-            //}
 
             SetWindowSizeNPosition();
         }
@@ -386,38 +372,27 @@ namespace VMT_ITV
 
             cfgValue = AppCfgMgr.Singleton.GetValueByKey("IsStartUp");
             String RegAddr = @"Software\Microsoft\Windows\CurrentVersion\Run";
-            // Sep 22 2021 Change registry from CURRENT_USER to LOCAL_MACHINE
-            UIntPtr uIntPtr = GetRegUInt(HKEY_LOCAL_MACHINE, RegAddr);
-            if (uIntPtr.ToUInt32() > 0)
+            Microsoft.Win32.RegistryKey keyDir = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(RegAddr, true);
+            if (keyDir != null)
             {
-                String regKey = KeyCLTVMT_ITV.Substring(KeyCLTVMT_ITV.LastIndexOf('\\') + 1);
-                String regValue = GetRegValue(uIntPtr, regKey);
-                if (!String.IsNullOrEmpty(regValue))
-                {
-                    TryDeleteRegValue(uIntPtr, regKey);
-                }
-            }
-            //Microsoft.Win32.RegistryKey keyDir = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(RegAddr, true);
-            //if (keyDir != null)
-            //{
-            //    String regKey = KeyCLTVMT_ITV.Substring(KeyCLTVMT_ITV.LastIndexOf('\\') + 1); // productName
-            //    String regValue = (String)keyDir.GetValue(regKey, ""); // ProductPath
+                String regKey = KeyCLTVMT_ITV.Substring(KeyCLTVMT_ITV.LastIndexOf('\\') + 1); // productName
+                String regValue = (String)keyDir.GetValue(regKey, ""); // ProductPath
 
-            //    //if (cfgValue.Equals("0"))
-            //    //{
-            //        if (!String.IsNullOrEmpty(regValue))
-            //        {
-            //            keyDir.DeleteValue(regKey, false);
-            //        }
-            //    //}
-            //    //else
-            //    //{
-            //    //    if (String.IsNullOrEmpty(regValue))
-            //    //    {
-            //    //        keyDir.SetValue(regKey, "\"" + AppCfgMgr.GetApplicationPath(true) + "\"", Microsoft.Win32.RegistryValueKind.String);
-            //    //    }
-            //    //}
-            //}
+                //if (cfgValue.Equals("0"))
+                //{
+                    if (!String.IsNullOrEmpty(regValue))
+                    {
+                        keyDir.DeleteValue(regKey, false);
+                    }
+                //}
+                //else
+                //{
+                //    if (String.IsNullOrEmpty(regValue))
+                //    {
+                //        keyDir.SetValue(regKey, "\"" + AppCfgMgr.GetApplicationPath(true) + "\"", Microsoft.Win32.RegistryValueKind.String);
+                //    }
+                //}
+            }
 
             VMT_Data_JAT2.VMT_DataMgr_Common.GetVmtAutoStartConfig_Ask();
 
@@ -1292,49 +1267,27 @@ namespace VMT_ITV
                         new Action(delegate
                         {
                             String RegAddr = @"Software\Microsoft\Windows\CurrentVersion\Run";
-                            // Sep 22 2021 Change registry from CURRENT_USER to LOCAL_MACHINE
-                            UIntPtr uIntPtr = GetRegUInt(HKEY_LOCAL_MACHINE, RegAddr);
-                            if (uIntPtr.ToUInt32() > 0)
+                            Microsoft.Win32.RegistryKey keyDir = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(RegAddr, true);
+                            if (keyDir != null)
                             {
-                                String regKey = KeyCLTVMT_ITV.Substring(KeyCLTVMT_ITV.LastIndexOf('\\') + 1);
-                                String regValue = GetRegValue(uIntPtr, regKey);
+                                String regKey = KeyCLTVMT_ITV.Substring(KeyCLTVMT_ITV.LastIndexOf('\\') + 1); // productName
+                                String regValue = (String)keyDir.GetValue(regKey, ""); // ProductPath
 
                                 if (!retStr.Equals("Y"))
                                 {
                                     if (!String.IsNullOrEmpty(regValue))
                                     {
-                                        TryDeleteRegValue(uIntPtr, regKey);
+                                        keyDir.DeleteValue(regKey, false);
                                     }
                                 }
                                 else
                                 {
                                     if (String.IsNullOrEmpty(regValue))
                                     {
-                                        TrySetRegValue(uIntPtr, regKey, "\"" + AppCfgMgr.GetApplicationPath(true) + "\"");
+                                        keyDir.SetValue(regKey, "\"" + AppCfgMgr.GetApplicationPath(true) + "\"", Microsoft.Win32.RegistryValueKind.String);
                                     }
-                                }                              
+                                }
                             }
-                            //Microsoft.Win32.RegistryKey keyDir = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(RegAddr, true);
-                            //if (keyDir != null)
-                            //{
-                            //    String regKey = KeyCLTVMT_ITV.Substring(KeyCLTVMT_ITV.LastIndexOf('\\') + 1); // productName
-                            //    String regValue = (String)keyDir.GetValue(regKey, ""); // ProductPath
-
-                            //    if (!retStr.Equals("Y"))
-                            //    {
-                            //        if (!String.IsNullOrEmpty(regValue))
-                            //        {
-                            //            keyDir.DeleteValue(regKey, false);
-                            //        }
-                            //    }
-                            //    else
-                            //    {
-                            //        if (String.IsNullOrEmpty(regValue))
-                            //        {
-                            //            keyDir.SetValue(regKey, "\"" + AppCfgMgr.GetApplicationPath(true) + "\"", Microsoft.Win32.RegistryValueKind.String);
-                            //        }
-                            //    }
-                            //}
                         }));
         }
         #endregion [NotifyGetVmtAutoStartConfig]

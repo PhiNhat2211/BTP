@@ -22,8 +22,6 @@ using VMT_Data_JAT2.Objects;
 //20190108
 using System.Threading;
 using Common.Interface;
-using Microsoft.Win32;
-using static Common.Util.Registry64;
 
 namespace VMT_ITV
 {
@@ -97,8 +95,7 @@ namespace VMT_ITV
             string[] vn = ver.Split('.');
             _VersionInfo = String.Format(PresentationMgr.Singleton.LanguageSer.GetResourceITV("MS0044", LanguageService.MESSAGE_GROUP) + " {0}.{1}.{2}.{3}", vn[0], vn[1], vn[2], vn[3]);
 
-            //Microsoft.Win32.RegistryKey keyDir = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(MainWindow.KeyCLTVMT_ITV);
-            RegistryKey keyDir = _openSubKey(Registry.LocalMachine, MainWindow.KeyCLTVMT_ITV, false, Is64Bit() ? RegWow64Options.KEY_WOW64_64KEY : RegWow64Options.KEY_WOW64_32KEY);
+            Microsoft.Win32.RegistryKey keyDir = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(MainWindow.KeyCLTVMT_ITV);
             string strPackageDate = "";
             if (keyDir != null)
                 strPackageDate = (String)keyDir.GetValue("PackageTime", @"Unknown");
@@ -213,8 +210,7 @@ namespace VMT_ITV
         private string getProductListFromCLTAgent()
         {
             // Set Default Update Server Address
-            //Microsoft.Win32.RegistryKey keyDir = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(MainWindow.KeyCLTAgent);
-            RegistryKey keyDir = _openSubKey(Registry.LocalMachine, MainWindow.KeyCLTAgent, false, Is64Bit() ? RegWow64Options.KEY_WOW64_64KEY : RegWow64Options.KEY_WOW64_32KEY);
+            Microsoft.Win32.RegistryKey keyDir = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(MainWindow.KeyCLTAgent);
             if (keyDir == null)
                 return "";
 

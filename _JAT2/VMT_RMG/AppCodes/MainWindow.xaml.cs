@@ -29,8 +29,6 @@ using static VMT_Data_JAT2.Objects.Common;
 using System.Threading;
 using System.Net.NetworkInformation;
 using System.IO;
-using Microsoft.Win32;
-using static Common.Util.Registry64;
 
 namespace VMT_RMG
 {
@@ -289,39 +287,27 @@ namespace VMT_RMG
 
             cfgValue = AppCfgMgr.Singleton.GetValueByKey("IsStartUp");
             String RegAddr = @"Software\Microsoft\Windows\CurrentVersion\Run";
-
-            // Sep 22 2021 Change registry from CURRENT_USER to LOCAL_MACHINE
-            UIntPtr uIntPtr = GetRegUInt(HKEY_LOCAL_MACHINE, RegAddr);
-            if (uIntPtr.ToUInt32() > 0)
+            Microsoft.Win32.RegistryKey keyDir = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(RegAddr, true);
+            if (keyDir != null)
             {
-                String regKey = KeyCLTVMT_RMG.Substring(KeyCLTVMT_RMG.LastIndexOf('\\') + 1);
-                String regValue = GetRegValue(uIntPtr, regKey);
+                String regKey = KeyCLTVMT_RMG.Substring(KeyCLTVMT_RMG.LastIndexOf('\\') + 1); // productName
+                String regValue = (String)keyDir.GetValue(regKey, ""); // ProductPath
+
+                //if (cfgValue.Equals("0"))
+                //{
                 if (!String.IsNullOrEmpty(regValue))
                 {
-                    TryDeleteRegValue(uIntPtr, regKey);
+                    keyDir.DeleteValue(regKey, false);
                 }
+                //}
+                //else
+                //{
+                //    if (String.IsNullOrEmpty(regValue))
+                //    {
+                //        keyDir.SetValue(regKey, "\"" + AppCfgMgr.GetApplicationPath(true) + "\"", Microsoft.Win32.RegistryValueKind.String);
+                //    }
+                //}
             }
-            //Microsoft.Win32.RegistryKey keyDir = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(RegAddr, true);
-            //if (keyDir != null)
-            //{
-            //    String regKey = KeyCLTVMT_RMG.Substring(KeyCLTVMT_RMG.LastIndexOf('\\') + 1); // productName
-            //    String regValue = (String)keyDir.GetValue(regKey, ""); // ProductPath
-               
-            //    //if (cfgValue.Equals("0"))
-            //    //{
-            //    if (!String.IsNullOrEmpty(regValue))
-            //    {
-            //        keyDir.DeleteValue(regKey, false);
-            //    }
-            //    //}
-            //    //else
-            //    //{
-            //    //    if (String.IsNullOrEmpty(regValue))
-            //    //    {
-            //    //        keyDir.SetValue(regKey, "\"" + AppCfgMgr.GetApplicationPath(true) + "\"", Microsoft.Win32.RegistryValueKind.String);
-            //    //    }
-            //    //}
-            //}
 
             VMT_Data_JAT2.VMT_DataMgr_Common.GetVmtAutoStartConfig_Ask();
 
@@ -919,7 +905,7 @@ namespace VMT_RMG
                                            + " " + ((int)(date - dateTimeStart).TotalMinutes).ToString() + " "
                                            + PresentationMgr.Singleton.LanguageSer.GetResourceRMG("LA0073", LanguageService.LABEL_MAINWINDOW); //Min
                                     }
-                                }                                              
+                                }
                                 this.UC_IndicatorView.CheckBox_Power.IsChecked = true;
                                 this.UC_IndicatorView.CheckBox_Wifi.IsChecked = true;
                                 PresentationMgr.AppWin.gIsServerConnected = true;
@@ -955,7 +941,7 @@ namespace VMT_RMG
                            {
                                PresentationMgr.MainView.UC_BreakTimeView.TextBlock_Break_End_Date.Text = date.ToString("yyyy/MM/dd") + " " + date.ToString("HH:mm:ss");
                            }
-                       }));         
+                       }));
         }
 
         private void PLCTimer_Click(object sender, EventArgs e)
@@ -1046,9 +1032,9 @@ namespace VMT_RMG
                             this.HideProgressBar(0);
                             //if (!String.IsNullOrEmpty(clone.shift))
                             //{
-                                this.UC_LogInView.userAccessRole = true;
-                                clone.Notice = PresentationMgr.Singleton.LanguageSer.GetResourceRMG("MS0007", LanguageService.MESSAGE_GROUP);
-                                this.UC_LogInView.ProcessByGetAccessRoleCallback(clone);
+                            this.UC_LogInView.userAccessRole = true;
+                            clone.Notice = PresentationMgr.Singleton.LanguageSer.GetResourceRMG("MS0007", LanguageService.MESSAGE_GROUP);
+                            this.UC_LogInView.ProcessByGetAccessRoleCallback(clone);
                             //}
                             //else
                             //{
@@ -1082,13 +1068,13 @@ namespace VMT_RMG
                             if (PresentationMgr.Singleton.showViewINV)
                             { //20201030 if VIEW_INV = FALSE, call getChangedMachineLocation every 4 secs. else [keep current process]
                                 VMT_DataMgr_RMG.GetChangedMachineLocation_Ask(loc.blck, loc.bay);
-                            } 
+                            }
                             else
                             {
                                 //VMT_Data_JAT2.VMT_DataMgr_Common.EndPolling_Ask(HessianComm.HessianCommType.GetChangedMachineLocation);
                                 VMT_Data_JAT2.VMT_DataMgr_Common.StartPolling_Ask(HessianComm.HessianCommType.GetChangedMachineLocation);
                             }
-                            
+
                             this.UC_LogInView.ProcessByLogin4MachineCallback(clone);
 
                             needSetTimeStart = true;
@@ -1179,7 +1165,7 @@ namespace VMT_RMG
                             }
 
                             if (!firstLoad) return;
-                            
+
                             string currBay = clone.bay;
                             if (currBay != "" && currBay != "00")
                             {
@@ -1195,7 +1181,7 @@ namespace VMT_RMG
                             this.locChg.blck = clone.blck;
                             this.locChg.bay = clone.bay;
 
-                            if (firstLoad == true && 
+                            if (firstLoad == true &&
                                     (!DataMgr.Singleton.SimpleBlockBayInfo.DicBlock.ContainsKey(clone.blck)
                                             || DataMgr.Singleton.SimpleBlockBayInfo.DicBlock[clone.blck].DicBay == null
                                             || (!String.IsNullOrEmpty(clone.bay) &&  !DataMgr.Singleton.SimpleBlockBayInfo.DicBlock[clone.blck].DicBay.ContainsKey(clone.bay) 
@@ -1312,7 +1298,7 @@ namespace VMT_RMG
                                   ytNoCheckCount += 1;
                               }
                           }
-                          
+
                           if (checkWrkCdPLCCount > 3)
                           {
                               wrkCdPLC = String.Empty;
@@ -1358,7 +1344,7 @@ namespace VMT_RMG
                                   continue;//jobOrder.jobKey = System.Guid.NewGuid().ToString();                    
 
                               //Check YtNo Changed
-                              
+
                               if (needToCheckYtNo && PresentationMgr.MainView.UC_YtSwapView.newYtNo != PresentationMgr.MainView.UC_YtSwapView.oldYtNo)
                               {
                                   if (jobOrder.jobKey.Equals(PresentationMgr.MainView.UC_YtSwapView.jobKeyChangeYtNo))
@@ -1375,7 +1361,7 @@ namespace VMT_RMG
                                       jobOrder.partnerMchn.mchnId = PresentationMgr.MainView.UC_YtSwapView.oldYtNo;
                                       ytNoFixedCount += 1;
                                   }
-                              }                             
+                              }
                               PresentationMgr.Singleton.JOB_Add(jobOrder);
                               //i++;
                           }
@@ -1397,7 +1383,7 @@ namespace VMT_RMG
                           PresentationMgr.Singleton.JOB_Sort();
 
                           JobList jobList = PresentationMgr.MainView.UC_JobList;
-                        
+
                           //20201008 show/hide mainview info BP#475
                           if (PresentationMgr.Singleton.showViewINV)
                           {
@@ -1415,7 +1401,7 @@ namespace VMT_RMG
                           }
                           else
                           {
-                              PresentationMgr.MainView.Grid_Block_All.Visibility = Visibility.Collapsed;            
+                              PresentationMgr.MainView.Grid_Block_All.Visibility = Visibility.Collapsed;
                               if (DataMgr.Singleton.List_JobOrder.Count < 1)
                               {
                                   if (PresentationMgr.MainView.UC_JobList.CurrentFilter.FilterJobBlock) //if all have data and block not exists data
@@ -1535,7 +1521,7 @@ namespace VMT_RMG
                           }
 
                           firstLoad = false;
-                          
+
                           //AUTO SELECT THE JOB
                           if (MainWin.autoSelectP)
                           {
@@ -1798,7 +1784,7 @@ namespace VMT_RMG
                       new Action(delegate
                       {
                           InterfaceMessageLoader.instance().WriteInterfaceMessage<RMG.VD_RMG_SwapList>(System.Reflection.MethodBase.GetCurrentMethod().Name, clone);
-                          
+
                           PresentationMgr.Singleton.swapListRTG.Clear();
 
                           foreach (VMT_Data_JAT2.Objects.Common.VmtSwap swapJob in clone.vmtSwap)
@@ -1981,7 +1967,7 @@ namespace VMT_RMG
                                 //    PresentationMgr.RemoveLoadingSwapInfo(jobOrder.type.ycTwinKey);
 
                                 if (!String.IsNullOrEmpty(jobKey))
-                                {                                  
+                                {
                                     foreach (VMT_Data_JAT2.Objects.Common.VD_Common_JobOrder jobOrder in DataMgr.Singleton.List_JobOrder)
                                     {
                                         if (jobOrder.jobKey == jobKey)
@@ -2702,8 +2688,8 @@ namespace VMT_RMG
                             {
                                 VMT_Data_JAT2.VMT_DataMgr_Common.GetBlockMapList_Ask(PresentationMgr.Singleton.CurrentBlock);
                             }
-                                                            
-                            clone = null; 
+
+                            clone = null;
                         }));
         }
         #endregion [NotifyBlockListForBlockMap]
@@ -2715,48 +2701,27 @@ namespace VMT_RMG
                         new Action(delegate
                         {
                             String RegAddr = @"Software\Microsoft\Windows\CurrentVersion\Run";
-                            // Sep 22 2021 Change registry from CURRENT_USER to LOCAL_MACHINE
-                            UIntPtr uIntPtr = GetRegUInt(HKEY_LOCAL_MACHINE, RegAddr);
-                            if (uIntPtr.ToUInt32() > 0)
+                            Microsoft.Win32.RegistryKey keyDir = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(RegAddr, true);
+                            if (keyDir != null)
                             {
-                                String regKey = KeyCLTVMT_RMG.Substring(KeyCLTVMT_RMG.LastIndexOf('\\') + 1);
-                                String regValue = GetRegValue(uIntPtr, regKey);
+                                String regKey = KeyCLTVMT_RMG.Substring(KeyCLTVMT_RMG.LastIndexOf('\\') + 1); // productName
+                                String regValue = (String)keyDir.GetValue(regKey, ""); // ProductPath
+
                                 if (!retStr.Equals("Y"))
                                 {
                                     if (!String.IsNullOrEmpty(regValue))
                                     {
-                                        TryDeleteRegValue(uIntPtr, regKey);
+                                        keyDir.DeleteValue(regKey, false);
                                     }
                                 }
                                 else
                                 {
                                     if (String.IsNullOrEmpty(regValue))
                                     {
-                                        TrySetRegValue(uIntPtr, regKey, "\"" + AppCfgMgr.GetApplicationPath(true) + "\"");
+                                        keyDir.SetValue(regKey, "\"" + AppCfgMgr.GetApplicationPath(true) + "\"", Microsoft.Win32.RegistryValueKind.String);
                                     }
-                                }                              
+                                }
                             }
-                            //Microsoft.Win32.RegistryKey keyDir = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(RegAddr, true);
-                            //if (keyDir != null)
-                            //{
-                            //    String regKey = KeyCLTVMT_RMG.Substring(KeyCLTVMT_RMG.LastIndexOf('\\') + 1); // productName
-                            //    String regValue = (String)keyDir.GetValue(regKey, ""); // ProductPath
-
-                            //    if (!retStr.Equals("Y"))
-                            //    {
-                            //        if (!String.IsNullOrEmpty(regValue))
-                            //        {
-                            //            keyDir.DeleteValue(regKey, false);
-                            //        }
-                            //    }
-                            //    else
-                            //    {
-                            //        if (String.IsNullOrEmpty(regValue))
-                            //        {
-                            //            keyDir.SetValue(regKey, "\"" + AppCfgMgr.GetApplicationPath(true) + "\"", Microsoft.Win32.RegistryValueKind.String);
-                            //        }
-                            //    }
-                            //}
 
                         }));
         }
@@ -2814,7 +2779,7 @@ namespace VMT_RMG
                                             else
                                             {
                                                 PresentationMgr.Singleton.SendGetInventoryAsk(PresentationMgr.Singleton.CurrentBlock, String.Empty);
-                                            }                                        
+                                            }
                                         }
                                     }
                                     else if (!clone.DicBlock[PresentationMgr.Singleton.CurrentBlock].IsVirtual)
@@ -3197,7 +3162,7 @@ namespace VMT_RMG
                                     }
                                 }
                                 PresentationMgr.MainView.UC_ContainerSearchView.SetSearchedJobList(locFilterJobList);
-                            }                               
+                            }
                             this.HideProgressBar(0);
                         }));
         }
@@ -3559,7 +3524,7 @@ namespace VMT_RMG
                             {
                                 PresentationMgr.Singleton.ThreadTimerStart(true); // exception => re-call getInventory data
                             }
-                           
+
                             //if (wrkCd == "1" || wrkCd == "2")
                             wrkCd = "";
                             plcCnt = 31;
@@ -3608,7 +3573,7 @@ namespace VMT_RMG
                         && value.currentTier == PresentationMgr.MainView.plcdomain.currentTier
                         && value.wrkCd == PresentationMgr.MainView.plcdomain.wrkCd
                         && value.msgSeq == PresentationMgr.MainView.plcdomain.msgSeq
-                    ) 
+                    )
                 )
                 return;
             var clone = Util.DeepCopy<VMT_Data_JAT2.Objects.RMG.VD_RMG_VmtDomain>(value);
@@ -3650,10 +3615,10 @@ namespace VMT_RMG
                                         plcCnt = 0;
 
                                         if ( !String.IsNullOrEmpty(clone.cntrNo) )
-                                            //(jobSelected != null &&
-                                            //                ((jobSelected.locWorking.blck == clone.currentBlock && jobSelected.locWorking.bay == clone.currentBay)
-                                            //                || (jobSelected.locFrom.blck == clone.currentBlock && jobSelected.locFrom.bay == clone.currentBay))
-                                            //            )
+                                        //(jobSelected != null &&
+                                        //                ((jobSelected.locWorking.blck == clone.currentBlock && jobSelected.locWorking.bay == clone.currentBay)
+                                        //                || (jobSelected.locFrom.blck == clone.currentBlock && jobSelected.locFrom.bay == clone.currentBay))
+                                        //            )
                                         {
                                             List<VMT_Data_JAT2.Objects.Common.VD_Common_JobOrder> lstJob = DataMgr.Singleton.List_JobOrder.FindAll(x => x.cntr.cntrNo == clone.cntrNo);
                                             if (lstJob.Count >= 2)
@@ -3871,7 +3836,7 @@ namespace VMT_RMG
                                     PresentationMgr.MainView.UC_InfomationView.UC_TargetJobInfo.Btn_Unlock.Opacity = 0.5;
                                 }
                             }
-                           
+
                             if (!String.IsNullOrEmpty(PresentationMgr.MainView.plcDomainTwistLock.cntrNo)
                                 && (PresentationMgr.MainView.plcDomainTwistLock.cntrNo != PresentationMgr.MainView.plcDomainTwistLockPrv.cntrNo
                                     || PresentationMgr.MainView.plcDomainTwistLock.currentBlock != PresentationMgr.MainView.plcDomainTwistLockPrv.currentBlock
@@ -3944,7 +3909,7 @@ namespace VMT_RMG
                                 endPollingPLCwrkCd12 = 1;
                             }
                         }));
-            
+
 
             this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
                         new Action(delegate
@@ -4016,7 +3981,7 @@ namespace VMT_RMG
                                             PresentationMgr.Singleton.SendGetInventoryList4Multi_Sync_Ask(PresentationMgr.Singleton.CurrentBlock, Convert.ToString(PresentationMgr.Singleton.CurrentBay));
                                         }));
                                     }
-                                    
+
                                 }
 
                                 //LOAD JOB LIST
@@ -4301,9 +4266,9 @@ namespace VMT_RMG
                             }
                             else
                             {
-                               //PresentationMgr.AppWin.UC_PopupView.ShowPopup(UC_PopupView.UC_PopupViewType.PopupViewType_Common,
-                               //PresentationMgr.Singleton.LanguageSer.GetResourceRMG("LA0127", LanguageService.LABEL_CUSTOMIZE), PresentationMgr.Singleton.LanguageSer.GetResourceRMG(clone.resultObj, LanguageService.MESSAGE_JOBSETERROR_GROUP)
-                               //, PresentationMgr.Singleton.LanguageSer.GetResourceRMG("MS0034", LanguageService.MESSAGE_GROUP), null, 0);
+                                //PresentationMgr.AppWin.UC_PopupView.ShowPopup(UC_PopupView.UC_PopupViewType.PopupViewType_Common,
+                                //PresentationMgr.Singleton.LanguageSer.GetResourceRMG("LA0127", LanguageService.LABEL_CUSTOMIZE), PresentationMgr.Singleton.LanguageSer.GetResourceRMG(clone.resultObj, LanguageService.MESSAGE_JOBSETERROR_GROUP)
+                                //, PresentationMgr.Singleton.LanguageSer.GetResourceRMG("MS0034", LanguageService.MESSAGE_GROUP), null, 0);
 
                             }
                             cntrReleasePLC = String.Empty;
@@ -4375,7 +4340,7 @@ namespace VMT_RMG
                                 PresentationMgr.AppWin.UC_PopupView.ShowPopup(UC_PopupView.UC_PopupViewType.PopupViewType_Common,
                                     PresentationMgr.Singleton.LanguageSer.GetResourceRMG("LA0225", LanguageService.LABEL_CUSTOMIZE),
                                     PresentationMgr.Singleton.LanguageSer.GetResourceRMG("S1", LanguageService.MESSAGE_JOBDONE_GROUP),
-                                    PresentationMgr.Singleton.LanguageSer.GetResourceRMG("MS0034", LanguageService.MESSAGE_GROUP), 
+                                    PresentationMgr.Singleton.LanguageSer.GetResourceRMG("MS0034", LanguageService.MESSAGE_GROUP),
                                     new UC_PopupView.Callback_Popup(CallbackClosePopup), 0);
                             }
                             clone = null;
