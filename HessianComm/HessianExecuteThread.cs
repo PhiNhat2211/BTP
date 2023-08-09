@@ -186,28 +186,29 @@ namespace HessianComm
                         this._timerKeepAliveStandAlone.Change(0, timeSpan);
                     }
                     break;
+                // Aug 09 2023 Remove DGPS & Pinning Api
                 case HessianCommType.DGPSAlive:
                     {
-                        if (this._timerDGPSAlive == null)
-                        {
-                            this._timerDGPSAlive = new Timer(this.DGPSAliveTimerCallback);
-                        }
+                        //if (this._timerDGPSAlive == null)
+                        //{
+                        //    this._timerDGPSAlive = new Timer(this.DGPSAliveTimerCallback);
+                        //}
 
-                        this._timerDGPSAlive.Change(0, timeSpan);
+                        //this._timerDGPSAlive.Change(0, timeSpan);
                     }
                     break;
                 case HessianCommType.SetPinningStation:
                     {
-                        if (this._timerPinningStation == null)
-                        {
-                            this._timerPinningStation = new Timer(this.PinningStationTimerCallback);
-                        }
+                        //if (this._timerPinningStation == null)
+                        //{
+                        //    this._timerPinningStation = new Timer(this.PinningStationTimerCallback);
+                        //}
 
-                        this._timerPinningStation.Change(0, timeSpan);
+                        //this._timerPinningStation.Change(0, timeSpan);
                     }
                     break;
-                
-                
+
+
                 case HessianCommType.GetMachineJobByKeys_New:
                     {
                         if (this._timerJobOrderList == null)
@@ -270,24 +271,25 @@ namespace HessianComm
                         this._IntervalGetMachineStopTimer = timeSpan;
                     }
                     break;
+                // Aug 09 27 2023 Remove Plc Api
                 case HessianCommType.CheckPLCData:
                     {
-                        if (this._timerCheckPLCData == null)
-                        {
-                            this._timerCheckPLCData = new Timer(this.CheckPLCDataCallback, obj, 0, timeSpan);
-                        }
-                        
-                        this._IntervalCheckPLCDataTimer = timeSpan;
+                        //if (this._timerCheckPLCData == null)
+                        //{
+                        //    this._timerCheckPLCData = new Timer(this.CheckPLCDataCallback, obj, 0, timeSpan);
+                        //}
+
+                        //this._IntervalCheckPLCDataTimer = timeSpan;
                     }
                     break;
                 case HessianCommType.CheckPLCTwistLock:
                     {
-                        if (this._timerCheckPLCTwistLock == null)
-                        {
-                            this._timerCheckPLCTwistLock = new Timer(this.CheckPLCTwistLockCallback, obj, 0, timeSpan);
-                        }
+                        //if (this._timerCheckPLCTwistLock == null)
+                        //{
+                        //    this._timerCheckPLCTwistLock = new Timer(this.CheckPLCTwistLockCallback, obj, 0, timeSpan);
+                        //}
 
-                        this._IntervalCheckPLCTwistLockTimer = timeSpan;
+                        //this._IntervalCheckPLCTwistLockTimer = timeSpan;
                     }
                     break;
                 case HessianCommType.GetChangedMachineLocation:
@@ -537,6 +539,9 @@ namespace HessianComm
 
                             //Common.Util.Logger.Log("[VMT Timestamp]");
                             //Common.Util.Logger.Log("[VMT Timestamp]" + DateTime.Now.ToString("[HH:mm:ss:fff]") + data.type.ToString() + "(+)");
+
+                            // Aug 09 2023 HandleLog
+                            this._callback(data.type, data.obj, true);
 
                             switch (data.type)
                             {

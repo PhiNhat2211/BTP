@@ -58,6 +58,12 @@ namespace VMT_Data_JAT2
     }
     public class VMT_DataMgr_Common_HessianCallback
     {
+        static public void HandleLogApi(bool isSend, HessianCommType type, Object obj)
+        {
+            if (VMT_DataMgr_Common_Callback.static_NotifyHandleLogApi != null)
+                VMT_DataMgr_Common_Callback.static_NotifyHandleLogApi(isSend, type, obj);
+        }
+
         static public void KeepAlive(ref Object obj)
         {
             if (obj is String)

@@ -244,7 +244,7 @@ namespace VMT_Data_JAT2
         }
 
         //- Hessian Callback
-        static private void HessianCommResultCallback(HessianCommType type, Object obj)
+        static private void HessianCommResultCallback(HessianCommType type, Object obj, bool isSend = false)
         {
             DateTime typeDateTime = DateTime.Now;
             TimeSpan tSpan = DateTime.Now - typeDateTime;
@@ -254,6 +254,17 @@ namespace VMT_Data_JAT2
                 LogMessage("HessianCommResultCallback Type : " + type.ToString());
 
                 //System.Diagnostics.Trace.WriteLine("[VMT RMG Callback Timestamp]" + DateTime.Now.ToString("[HH:mm:ss:fff]") + type.ToString() + "(+)");
+
+                // Aug 09 2023 HandleLog
+                if (isSend)
+                {
+                    VMT_DataMgr_Common_HessianCallback.HandleLogApi(true, type, obj);
+                    return;
+                }
+                else
+                {
+                    VMT_DataMgr_Common_HessianCallback.HandleLogApi(false, type, obj);
+                }
 
                 switch (type)
                 {

@@ -2055,6 +2055,12 @@ namespace VMT_Data_JAT2
 
         //-------------------------------------------------------------------------
         //- Callback Functions
+        public delegate void Callback_NotifyHandleLogApi(bool isSend, HessianCommType type, Object value);
+        public static void SetCallback_NotifyHandleLogApi(Callback_NotifyHandleLogApi fp)
+        {
+            static_NotifyHandleLogApi = fp;
+        }
+
         public delegate void CallBack_NotifySwinfoRP(ref VMT_Data_JAT2.Objects.Common.VD_Common_Swinfo_Receive value);
         static public void SetCallBack_NotifySwinfoRP(CallBack_NotifySwinfoRP fp)
         {
@@ -2297,6 +2303,8 @@ namespace VMT_Data_JAT2
         {
             static_NotifyGetConfigValue = fp;
         }
+
+        static public Callback_NotifyHandleLogApi static_NotifyHandleLogApi;
 
         static public CallBack_NotifySwinfoRP static_NotifySwinfoRP;
 

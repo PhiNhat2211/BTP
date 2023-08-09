@@ -31,6 +31,9 @@ using System.Net.NetworkInformation;
 using System.IO;
 using Microsoft.Win32;
 using static Common.Util.Registry64;
+using Newtonsoft.Json;
+using System.Net;
+using System.Net.Sockets;
 
 namespace VMT_RMG
 {
@@ -505,6 +508,8 @@ namespace VMT_RMG
 
         private void InitAppCallbackFunctions()
         {
+            VMT_Data_JAT2.VMT_DataMgr_Common_Callback.SetCallback_NotifyHandleLogApi(new VMT_Data_JAT2.VMT_DataMgr_Common_Callback.Callback_NotifyHandleLogApi(NotifyHandleLogApi));
+
             VMT_Data_JAT2.VMT_DataMgr_Common_Callback.static_NotifyGPSStatus = new VMT_Data_JAT2.VMT_DataMgr_Common_Callback.Callback_NotifyGPSStatus(NotifyGPSStatus);
             VMT_Data_JAT2.VMT_DataMgr_Common_Callback.SetCallBack_NotifyGPSStatus(VMT_Data_JAT2.VMT_DataMgr_Common_Callback.static_NotifyGPSStatus);
 
@@ -718,6 +723,105 @@ namespace VMT_RMG
         }
 
         #region [Callback Delegate Functions - RMG]
+        #region [NotifyHandleLogApi]
+        public void NotifyHandleLogApi(bool isSend, HessianComm.HessianCommType type, Object obj)
+        {
+            this.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal,
+                        new Action(delegate
+                        {
+                            if (App.TEST_MODE)
+                            {
+                                String jsonObj = JsonConvert.SerializeObject(obj);
+                                if (isSend)
+                                {
+                                    if (Convert.ToString(type).ToUpper().Contains("KEEPALIVE"))
+                                    {
+                                        String IpToPing = VMT_DataMgr.gHessianServerIP;
+                                        LogWin.WriteLog("");
+                                        LogWin.WriteLog("MAC: " + GetSystemMacStr() + " | IP: " + GetDeviceIpStr() + " | PING TO " + IpToPing + ": " + GetPingTimeAverageStr(IpToPing, 4));
+                                        LogWin.WriteLog("");
+                                    }
+                                    LogWin.WriteLog("SEND: " + Convert.ToString(type) + " | " + jsonObj, true);
+                                }
+                                else
+                                {
+                                    LogWin.WriteLog("RECEIVE: " + Convert.ToString(type) + " | " + jsonObj, true);
+                                }
+                            }
+                        }));
+        }
+        public string GetSystemMacStr()
+        {
+            String returnStr = String.Empty;
+            try
+            {
+                String firstMacAddress = NetworkInterface.GetAllNetworkInterfaces()
+                    .Where(nic => nic.OperationalStatus == OperationalStatus.Up && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                    .Select(nic => nic.GetPhysicalAddress().ToString())
+                    .FirstOrDefault();
+
+                returnStr = firstMacAddress;
+                if (String.IsNullOrEmpty(returnStr))
+                    returnStr = "EMPTY";
+            }
+            catch (Exception e)
+            {
+                returnStr = e.Message;
+            }           
+            return returnStr;
+        }
+        public String GetDeviceIpStr()
+        {
+            String returnStr = String.Empty;
+            try
+            {
+                var host = Dns.GetHostEntry(Dns.GetHostName());
+                foreach (var ip in host.AddressList)
+                {
+                    if (ip.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        returnStr += Convert.ToString(ip) + " | ";
+                    }
+                }
+                if (String.IsNullOrEmpty(returnStr))
+                    returnStr = "EMPTY";
+            }
+            catch (Exception e)
+            {
+                returnStr = e.Message;
+            }         
+            return returnStr;
+        }      
+        public String GetPingTimeAverageStr(string host, int echoNum)
+        {
+            String returnStr = String.Empty;
+            try
+            {
+                long totalTime = 0;
+                int timeout = 120;
+                Ping pingSender = new Ping();
+
+                for (int i = 0; i < echoNum; i++)
+                {
+                    PingReply reply = pingSender.Send(host, timeout);
+                    if (reply.Status == IPStatus.Success)
+                    {
+                        totalTime += reply.RoundtripTime;
+                    }
+                }
+                double ingTimeAverage = totalTime / echoNum;
+                if (ingTimeAverage <= 0)
+                    returnStr = "FAILED";
+                else
+                    returnStr = Convert.ToString(totalTime / echoNum);
+            }
+            catch (Exception e)
+            {
+                returnStr = e.Message;
+            }
+            return returnStr;
+        }
+        #endregion [NotifyHandleLogApi]
 
         #region [NotifyLogout]
         public void NotifyLogout(Boolean value)
@@ -995,7 +1099,7 @@ namespace VMT_RMG
         #region [NotifyMessage]
         public void NotifyMessage(ref VMT_Data_JAT2.Objects.Common.VD_Common_MachineNotice_Receive value)
         {
-            LogWin.WriteLog("VMT Debug ==> " + "NotifyMessage Sussess ");
+            //LogWin.WriteLog("VMT Debug ==> " + "NotifyMessage Sussess ");
 
             var clone = Util.DeepCopy<VMT_Data_JAT2.Objects.Common.VD_Common_MachineNotice_Receive>(value);
 
@@ -1036,7 +1140,7 @@ namespace VMT_RMG
         {
             var clone = Util.DeepCopy<VMT_Data_JAT2.Objects.Common.VD_Common_GetUserAccesRole_Receive>(value);
 
-            LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.GroupListSeperator));
+            //LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.GroupListSeperator));
 
             this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
                         new Action(delegate
@@ -1268,7 +1372,7 @@ namespace VMT_RMG
         {
             var clone = Util.DeepCopy<VMT_Data_JAT2.Objects.Common.VD_Common_SendMachineStatusChange_Receive>(value);
 
-            LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, Convert.ToString(value.m_iResult)));
+            //LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, Convert.ToString(value.m_iResult)));
 
             this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
                         new Action(delegate
@@ -2101,7 +2205,7 @@ namespace VMT_RMG
         #region [NotifyJobReOnChassis]
         public void NotifyJobReOnChassis(Boolean value)
         {
-            LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.ToString()));
+            //LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.ToString()));
             InterfaceMessageLoader.instance().WriteInterfaceMessage<bool?>(System.Reflection.MethodBase.GetCurrentMethod().Name, (bool?)value);
 
             this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
@@ -2132,7 +2236,7 @@ namespace VMT_RMG
         #region [NotifyJobReOnChassis]
         public void NotifyCheckYcDeTwin(Boolean value)
         {
-            LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.ToString()));
+            //LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.ToString()));
             InterfaceMessageLoader.instance().WriteInterfaceMessage<bool?>(System.Reflection.MethodBase.GetCurrentMethod().Name, (bool?)value);
 
             this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
@@ -2212,7 +2316,7 @@ namespace VMT_RMG
         public void NotifyMachineStopCodeList(ref VMT_Data_JAT2.Objects.Common.VD_Common_MachineStopCodeList_Receive value)
         {
             var clone = Util.DeepCopy<VMT_Data_JAT2.Objects.Common.VD_Common_MachineStopCodeList_Receive>(value);
-            LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.m_pData.Count.ToString()));
+            //LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.m_pData.Count.ToString()));
 
             this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
                         new Action(delegate
@@ -2228,7 +2332,7 @@ namespace VMT_RMG
         public void NotifyMachineAccessAction(ref VMT_Data_JAT2.Objects.Common.VD_Common_MachineAccessAction_Receive value)
         {
             var clone = Util.DeepCopy<VMT_Data_JAT2.Objects.Common.VD_Common_MachineAccessAction_Receive>(value);
-            LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.showSetting.ToString()));
+            //LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.showSetting.ToString()));
 
             this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
                         new Action(delegate
@@ -2562,7 +2666,7 @@ namespace VMT_RMG
         public void NotifyBlockList(VMT_Data_JAT2.Objects.Common.VD_Common_SimpleBlockBayInfo_Receive value)
         {
             var clone = Util.DeepCopy<VMT_Data_JAT2.Objects.Common.VD_Common_SimpleBlockBayInfo_Receive>(value);
-            LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value == null ? "null" : value.Count.ToString()));
+            //LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value == null ? "null" : value.Count.ToString()));
 
             this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
                         new Action(delegate
@@ -2650,7 +2754,7 @@ namespace VMT_RMG
 
             var clone = Util.DeepCopy<VMT_Data_JAT2.Objects.Common.VD_Common_SimpleBlockBayInfo_Receive>(value);
 
-            LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value == null ? "null" : value.Count.ToString()));
+            //LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value == null ? "null" : value.Count.ToString()));
 
             this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
                         new Action(delegate
@@ -2766,7 +2870,7 @@ namespace VMT_RMG
         public void NotifyBlockMapList(VMT_Data_JAT2.Objects.Common.VD_Common_SimpleBlockBayInfo_Receive value)
         {
             var clone = Util.DeepCopy<VMT_Data_JAT2.Objects.Common.VD_Common_SimpleBlockBayInfo_Receive>(value);
-            LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.Count.ToString()));
+            //LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.Count.ToString()));
 
             this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
                         new Action(delegate
@@ -2864,7 +2968,7 @@ namespace VMT_RMG
         public void NotifyBlockMapList1(VMT_Data_JAT2.Objects.Common.VD_Common_SimpleBlockBayInfo_Receive value)
         {
             var clone = Util.DeepCopy<VMT_Data_JAT2.Objects.Common.VD_Common_SimpleBlockBayInfo_Receive>(value);
-            LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.Count.ToString()));
+            //LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.Count.ToString()));
 
             this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
                         new Action(delegate
@@ -2934,7 +3038,7 @@ namespace VMT_RMG
         public void NotifyBlockMapList2(VMT_Data_JAT2.Objects.Common.VD_Common_SimpleBlockBayInfo_Receive value)
         {
             var clone = Util.DeepCopy<VMT_Data_JAT2.Objects.Common.VD_Common_SimpleBlockBayInfo_Receive>(value);
-            LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.Count.ToString()));
+            //LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.Count.ToString()));
 
             this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
                         new Action(delegate
@@ -3004,7 +3108,7 @@ namespace VMT_RMG
         public void NotifyBlockMapSwapList(VMT_Data_JAT2.Objects.Common.VD_Common_SimpleBlockBayInfo_Receive value)
         {
             var clone = Util.DeepCopy<VMT_Data_JAT2.Objects.Common.VD_Common_SimpleBlockBayInfo_Receive>(value);
-            LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.Count.ToString()));
+            //LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.Count.ToString()));
 
             this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
                         new Action(delegate
@@ -3075,7 +3179,7 @@ namespace VMT_RMG
         public void NotifyGetMahchineList(ref RMG.VD_RMG_PartnerMachineList value)
         {
             var clone = Util.DeepCopy<RMG.VD_RMG_PartnerMachineList>(value);
-            LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.Count.ToString()));
+            //LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.Count.ToString()));
 
             this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
                         new Action(delegate
@@ -3101,7 +3205,7 @@ namespace VMT_RMG
         public void NotifyGetMahchineListofPool(ref RMG.VD_RMG_PartnerMachineList value)
         {
             var clone = Util.DeepCopy<RMG.VD_RMG_PartnerMachineList>(value);
-            LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.Count.ToString()));
+            //LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.Count.ToString()));
 
             this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
                         new Action(delegate
@@ -3175,7 +3279,7 @@ namespace VMT_RMG
         public void NotifyGetJobOrderByContainer(ref RMG.VD_RMG_JobOrderList value)
         {
             var clone = Util.DeepCopy<RMG.VD_RMG_JobOrderList>(value);
-            LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.Count.ToString()));
+            //LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.Count.ToString()));
 
             this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
                         new Action(delegate
@@ -3206,7 +3310,7 @@ namespace VMT_RMG
         #region [NotifySetDetwinJob]
         public void NotifySetDetwinJob(Boolean value)
         {
-            LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.ToString()));
+            //LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.ToString()));
             InterfaceMessageLoader.instance().WriteInterfaceMessage<bool?>(System.Reflection.MethodBase.GetCurrentMethod().Name, (bool?)value);
 
             this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
@@ -3327,7 +3431,7 @@ namespace VMT_RMG
         public void NotifyGetContainerInfo(ref VMT_Data_JAT2.Objects.RMG.VD_RMG_ContainerInfo_Receive value)
         {
             var clone = Util.DeepCopy<RMG.VD_RMG_ContainerInfo_Receive>(value);
-            LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.ToString()));
+            //LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.ToString()));
 
             this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
                         new Action(delegate
@@ -3344,7 +3448,7 @@ namespace VMT_RMG
         public void NotifyGetTwinContainerInfo(ref VMT_Data_JAT2.Objects.RMG.VD_RMG_ContainerInfo_Receive value)
         {
             var clone = Util.DeepCopy<RMG.VD_RMG_ContainerInfo_Receive>(value);
-            LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.ToString()));
+            //LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.ToString()));
 
             this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
                         new Action(delegate
@@ -3360,7 +3464,7 @@ namespace VMT_RMG
         public void NotifyDoSwap4Manual(String value)
         {
             var clone = Util.DeepCopy<String>(value);
-            LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.ToString()));
+            //LogWin.WriteLog(String.Format("[{0}] => {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, value.ToString()));
 
             this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
                         new Action(delegate

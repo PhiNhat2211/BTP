@@ -254,7 +254,7 @@ namespace HessianComm
         // Exception Throw object for External Module
         public delegate void ExceptionDelegate(Exception ex);
 
-        public delegate void HessianCommCallback(HessianCommType type, object obj);
+        public delegate void HessianCommCallback(HessianCommType type, object obj, bool isSend = false);
 
         public static List<ExceptionDelegate> ExceptionDelegatorList = new List<ExceptionDelegate>();
 

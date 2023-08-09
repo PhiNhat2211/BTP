@@ -141,7 +141,10 @@ namespace HessianComm
                         }
                       
                         try
-                        {                          
+                        {
+                            // Aug 09 2023 HandleLog
+                            this._callback(data.type, obj, true);
+
                             switch (data.type)
                             {
                                 case HessianCommType.KeepAlive:
