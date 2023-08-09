@@ -1277,32 +1277,32 @@ namespace VMT_RMG
 
         public void SaveLog(string sJob)  // nDataType 0 EEv2JobOrder, 
         {
-            try
-            {
-                string sRootPath = AppCfgMgr.GetAppDirectory();
-                string sDirPath = sRootPath + @"{0}\Log\"
-                    + System.DateTime.Now.Year + "." + System.DateTime.Now.Month + "." + System.DateTime.Now.Day;
+            //try
+            //{
+            //    string sRootPath = AppCfgMgr.GetAppDirectory();
+            //    string sDirPath = sRootPath + @"{0}\Log\"
+            //        + System.DateTime.Now.Year + "." + System.DateTime.Now.Month + "." + System.DateTime.Now.Day;
 
-                if (Directory.Exists(sDirPath) == false)
-                {
-                    Directory.CreateDirectory(sDirPath);
-                }
+            //    if (Directory.Exists(sDirPath) == false)
+            //    {
+            //        Directory.CreateDirectory(sDirPath);
+            //    }
 
-                string logFilePath = @sDirPath + "/YC_LOG_" + System.DateTime.Now.Hour + ".txt";
+            //    string logFilePath = @sDirPath + "/YC_LOG_" + System.DateTime.Now.Hour + ".txt";
 
-                FileStream fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write);
-                StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8);
-                sw.WriteLine("//===========================================================================");
-                sw.WriteLine("[" + System.DateTime.Now.ToString("HH:mm:ss.fff", System.Globalization.DateTimeFormatInfo.InvariantInfo) + "]" + sJob);
-                sw.WriteLine("//===========================================================================\r\n");
-                sw.Flush();
-                sw.Close();
-                fs.Close();
-            }
-            catch (Exception ex)
-            {
+            //    FileStream fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write);
+            //    StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8);
+            //    sw.WriteLine("//===========================================================================");
+            //    sw.WriteLine("[" + System.DateTime.Now.ToString("HH:mm:ss.fff", System.Globalization.DateTimeFormatInfo.InvariantInfo) + "]" + sJob);
+            //    sw.WriteLine("//===========================================================================\r\n");
+            //    sw.Flush();
+            //    sw.Close();
+            //    fs.Close();
+            //}
+            //catch (Exception ex)
+            //{
 
-            }
+            //}
         }
 
         public void SetOverValue(Int32 value)

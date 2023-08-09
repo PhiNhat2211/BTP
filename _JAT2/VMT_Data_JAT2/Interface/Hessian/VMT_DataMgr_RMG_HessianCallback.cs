@@ -1734,7 +1734,7 @@ namespace VMT_Data_JAT2
 
         static public void GetInventoryList_New(Object obj)
         {
-            VMT_DataMgr_RMG.SaveLog("CAST_DATA_INVENTORY_BAYVIEW");
+            //VMT_DataMgr_RMG.SaveLog("CAST_DATA_INVENTORY_BAYVIEW");
 
             VMT_Data_JAT2.Objects.RMG.VD_RMG_InventoryInfo_Receive inventoryReceive = GetInventoryListFromObject_New(obj);
             inventoryReceive.enPurposeType = Objects.RMG.VD_RMG_InventoryInfo_Receive.Purpose_type.TYPE_FOREGROUND;

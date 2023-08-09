@@ -733,7 +733,7 @@ namespace VMT_Data_JAT2
                     machine.rfidBlck = Convert.ToString(retHashtable["rfidBlck"]);
                     machine.armgReadFlg = Convert.ToString(retHashtable["armgReadFlg"]);
 
-                    SaveLog("[GetMachineStatusChanged Callback]", "[rfidBlck]" + Convert.ToString(retHashtable["rfidBlck"]) + " [armgReadFlg]" + Convert.ToString(retHashtable["armgReadFlg"]));
+                    //SaveLog("[GetMachineStatusChanged Callback]", "[rfidBlck]" + Convert.ToString(retHashtable["rfidBlck"]) + " [armgReadFlg]" + Convert.ToString(retHashtable["armgReadFlg"]));
 
                     machine.vrtlFlg = Convert.ToString(retHashtable["vrtlFlg"]);
                     machine.noticeMsg = Convert.ToString(retHashtable["noticeMsg"]);
@@ -766,33 +766,33 @@ namespace VMT_Data_JAT2
 
         static public void SaveLog(string sJob, string sJobData)  // nDataType 0 EEv2JobOrder, 
         {
-            try
-            {
-                string sRootPath = AppDomain.CurrentDomain.BaseDirectory;
+            //try
+            //{
+            //    string sRootPath = AppDomain.CurrentDomain.BaseDirectory;
 
-                string sDirPath = sRootPath + @"{0}\Log\"
-                    + System.DateTime.Now.Year + "." + System.DateTime.Now.Month + "." + System.DateTime.Now.Day;
-                if (Directory.Exists(sDirPath) == false)
-                {
-                    Directory.CreateDirectory(sDirPath);
-                }
+            //    string sDirPath = sRootPath + @"{0}\Log\"
+            //        + System.DateTime.Now.Year + "." + System.DateTime.Now.Month + "." + System.DateTime.Now.Day;
+            //    if (Directory.Exists(sDirPath) == false)
+            //    {
+            //        Directory.CreateDirectory(sDirPath);
+            //    }
 
-                string logFilePath = @sDirPath + "/ITV_LOG_" + System.DateTime.Now.Hour + ".txt";
+            //    string logFilePath = @sDirPath + "/ITV_LOG_" + System.DateTime.Now.Hour + ".txt";
 
-                FileStream fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write);
-                StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8);
-                sw.WriteLine("//===========================================================================");
-                sw.WriteLine("[" + System.DateTime.Now.ToString() + "]" + sJob);
-                sw.WriteLine(sJobData);
-                sw.WriteLine("//===========================================================================\r\n");
-                sw.Flush();
-                sw.Close();
-                fs.Close();
-            }
-            catch (Exception ex)
-            {
+            //    FileStream fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write);
+            //    StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8);
+            //    sw.WriteLine("//===========================================================================");
+            //    sw.WriteLine("[" + System.DateTime.Now.ToString() + "]" + sJob);
+            //    sw.WriteLine(sJobData);
+            //    sw.WriteLine("//===========================================================================\r\n");
+            //    sw.Flush();
+            //    sw.Close();
+            //    fs.Close();
+            //}
+            //catch (Exception ex)
+            //{
 
-            }
+            //}
         }
 
         static public void GetJobOrderList_New(ref Object obj)
@@ -1097,20 +1097,20 @@ namespace VMT_Data_JAT2
                         jobOrderValue.type.etw = String.IsNullOrEmpty(Convert.ToString(retHashtable["etw"])) ? "3000" : Convert.ToString(retHashtable["etw"]); // 5min is default
                         jobOrderForITVValue.JobOrder.Add(jobOrderValue);
 
-                        SaveLog("GetMachinesJobByKeys Callback",
-                            "WorkingMchn"
-                            + "[JobStatus]" + jobOrderValue.type.jobStatus
-                            + " [mchnId]" + jobOrderValue.workingMchn.mchnId + " [mchnTp]" + jobOrderValue.workingMchn.mchnTp
-                            + " [mchnSts]" + jobOrderValue.workingMchn.mchnSts
-                            + "\nPartnerMchn"
-                            + " [mchnId]" + jobOrderValue.partnerMchn.mchnId + " [mchnTp]" + jobOrderValue.partnerMchn.mchnTp
-                            + " [mchnSts]" + jobOrderValue.partnerMchn.mchnSts
-                            + "\nCntr"
-                            + " [cntrNo]" + jobOrderValue.cntr.cntrNo
-                            + "\nType"
-                            + " [jobTp]" + jobOrderValue.type.jobTp + " [jobStatus]" + jobOrderValue.type.jobStatus
-                            + " [ytJbSts]" + jobOrderValue.ytJbSts
-                        );
+                        //SaveLog("GetMachinesJobByKeys Callback",
+                        //    "WorkingMchn"
+                        //    + "[JobStatus]" + jobOrderValue.type.jobStatus
+                        //    + " [mchnId]" + jobOrderValue.workingMchn.mchnId + " [mchnTp]" + jobOrderValue.workingMchn.mchnTp
+                        //    + " [mchnSts]" + jobOrderValue.workingMchn.mchnSts
+                        //    + "\nPartnerMchn"
+                        //    + " [mchnId]" + jobOrderValue.partnerMchn.mchnId + " [mchnTp]" + jobOrderValue.partnerMchn.mchnTp
+                        //    + " [mchnSts]" + jobOrderValue.partnerMchn.mchnSts
+                        //    + "\nCntr"
+                        //    + " [cntrNo]" + jobOrderValue.cntr.cntrNo
+                        //    + "\nType"
+                        //    + " [jobTp]" + jobOrderValue.type.jobTp + " [jobStatus]" + jobOrderValue.type.jobStatus
+                        //    + " [ytJbSts]" + jobOrderValue.ytJbSts
+                        //);
 
                     }
                 }

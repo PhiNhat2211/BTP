@@ -424,34 +424,34 @@ namespace VMT_ITV
 
         public void SaveLog(string sJob, string sJobData)  // nDataType 0 EEv2JobOrder, 
         {
-            try
-            {
-                string sRootPath = AppCfgMgr.GetAppDirectory();
+            //try
+            //{
+            //    string sRootPath = AppCfgMgr.GetAppDirectory();
 
-                string sDirPath = sRootPath + @"{0}\Log\"
-                    + System.DateTime.Now.Year + "." + System.DateTime.Now.Month + "." + System.DateTime.Now.Day;
+            //    string sDirPath = sRootPath + @"{0}\Log\"
+            //        + System.DateTime.Now.Year + "." + System.DateTime.Now.Month + "." + System.DateTime.Now.Day;
               
-                if (Directory.Exists(sDirPath) == false)
-                {
-                    Directory.CreateDirectory(sDirPath);
-                }
+            //    if (Directory.Exists(sDirPath) == false)
+            //    {
+            //        Directory.CreateDirectory(sDirPath);
+            //    }
 
-                string logFilePath = @sDirPath + "/ITV_LOG_" + System.DateTime.Now.Hour + ".txt";
+            //    string logFilePath = @sDirPath + "/ITV_LOG_" + System.DateTime.Now.Hour + ".txt";
 
-                FileStream fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write);
-                StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8);
-                sw.WriteLine("//===========================================================================");
-                sw.WriteLine("[" + System.DateTime.Now.ToString() + "]" + sJob);
-                sw.WriteLine(sJobData);
-                sw.WriteLine("//===========================================================================\r\n");
-                sw.Flush();
-                sw.Close();
-                fs.Close();
-            }
-            catch (Exception ex)
-            {
+            //    FileStream fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write);
+            //    StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8);
+            //    sw.WriteLine("//===========================================================================");
+            //    sw.WriteLine("[" + System.DateTime.Now.ToString() + "]" + sJob);
+            //    sw.WriteLine(sJobData);
+            //    sw.WriteLine("//===========================================================================\r\n");
+            //    sw.Flush();
+            //    sw.Close();
+            //    fs.Close();
+            //}
+            //catch (Exception ex)
+            //{
 
-            }
+            //}
         }
 
         private void LayoutRoot_Loaded(object sender, RoutedEventArgs e)
@@ -1107,41 +1107,41 @@ namespace VMT_ITV
 
                 #region [SaveLog]
                 // for Debug Log save
-                if (value.FirstJob != null && value.FirstJob.cntr != null && !String.IsNullOrEmpty(value.FirstJob.cntr.cntrNo) )
-                {
-                    SaveLog("ProcessByJobOrderITVCallback First UI",
-                        "WorkingMchn"
-                        + "[firstJobStatus]" + value.FirstJobStatus
-                        + " [mchnId]" + value.FirstJob.workingMchn.mchnId + " [mchnTp]" + value.FirstJob.workingMchn.mchnTp
-                        + " [mchnSts]" + value.FirstJob.workingMchn.mchnSts 
-                        + "\nPartnerMchn"
-                        + " [mchnId]" + value.FirstJob.partnerMchn.mchnId + " [mchnTp]" + value.FirstJob.partnerMchn.mchnTp
-                        + " [mchnSts]" + value.FirstJob.partnerMchn.mchnSts 
-                        + "\nCntr"
-                        + " [cntrNo]" + value.FirstJob.cntr.cntrNo
-                        + "\nType"
-                        + " [jobTp]" + value.FirstJob.type.jobTp + " [jobStatus]" + value.FirstJob.type.jobStatus
-                        + " [ytJbSts]" + value.FirstJob.ytJbSts
-                    );
-                }
+                //if (value.FirstJob != null && value.FirstJob.cntr != null && !String.IsNullOrEmpty(value.FirstJob.cntr.cntrNo) )
+                //{
+                //    SaveLog("ProcessByJobOrderITVCallback First UI",
+                //        "WorkingMchn"
+                //        + "[firstJobStatus]" + value.FirstJobStatus
+                //        + " [mchnId]" + value.FirstJob.workingMchn.mchnId + " [mchnTp]" + value.FirstJob.workingMchn.mchnTp
+                //        + " [mchnSts]" + value.FirstJob.workingMchn.mchnSts 
+                //        + "\nPartnerMchn"
+                //        + " [mchnId]" + value.FirstJob.partnerMchn.mchnId + " [mchnTp]" + value.FirstJob.partnerMchn.mchnTp
+                //        + " [mchnSts]" + value.FirstJob.partnerMchn.mchnSts 
+                //        + "\nCntr"
+                //        + " [cntrNo]" + value.FirstJob.cntr.cntrNo
+                //        + "\nType"
+                //        + " [jobTp]" + value.FirstJob.type.jobTp + " [jobStatus]" + value.FirstJob.type.jobStatus
+                //        + " [ytJbSts]" + value.FirstJob.ytJbSts
+                //    );
+                //}
 
-                if (value.SecondJob != null && value.SecondJob.cntr != null && !String.IsNullOrEmpty(value.SecondJob.cntr.cntrNo) )
-                {
-                    SaveLog("ProcessByJobOrderCallback Second UI",
-                       "WorkingMchn"
-                       + "[secondJobStatus]" + value.SecondJobStatus
-                       + " [mchnId]" + value.SecondJob.workingMchn.mchnId + " [mchnTp]" + value.SecondJob.workingMchn.mchnTp
-                       + " [mchnSts]" + value.SecondJob.workingMchn.mchnSts
-                       + "\nPartnerMchn"
-                       + " [mchnId]" + value.SecondJob.partnerMchn.mchnId + " [mchnTp]" + value.SecondJob.partnerMchn.mchnTp
-                       + " [mchnSts]" + value.SecondJob.partnerMchn.mchnSts
-                       + "\nCntr"
-                       + " [cntrNo]" + value.SecondJob.cntr.cntrNo
-                       + "\nType"
-                       + " [jobTp]" + value.SecondJob.type.jobTp + " [jobStatus]" + value.SecondJob.type.jobStatus
-                       + " [ytJbSts]" + value.SecondJob.ytJbSts
-                   );
-                }
+                //if (value.SecondJob != null && value.SecondJob.cntr != null && !String.IsNullOrEmpty(value.SecondJob.cntr.cntrNo) )
+                //{
+                //    SaveLog("ProcessByJobOrderCallback Second UI",
+                //       "WorkingMchn"
+                //       + "[secondJobStatus]" + value.SecondJobStatus
+                //       + " [mchnId]" + value.SecondJob.workingMchn.mchnId + " [mchnTp]" + value.SecondJob.workingMchn.mchnTp
+                //       + " [mchnSts]" + value.SecondJob.workingMchn.mchnSts
+                //       + "\nPartnerMchn"
+                //       + " [mchnId]" + value.SecondJob.partnerMchn.mchnId + " [mchnTp]" + value.SecondJob.partnerMchn.mchnTp
+                //       + " [mchnSts]" + value.SecondJob.partnerMchn.mchnSts
+                //       + "\nCntr"
+                //       + " [cntrNo]" + value.SecondJob.cntr.cntrNo
+                //       + "\nType"
+                //       + " [jobTp]" + value.SecondJob.type.jobTp + " [jobStatus]" + value.SecondJob.type.jobStatus
+                //       + " [ytJbSts]" + value.SecondJob.ytJbSts
+                //   );
+                //}
                 // for Debug XMl Log save
                 InterfaceMessageLoader.instance().WriteInterfaceMessage<ITV.VD_ITV_JobOrderList>("ProcessByJobOrderITVCallback", value);
                 #endregion [SaveLog]
@@ -1814,10 +1814,10 @@ namespace VMT_ITV
                     cntrNo = selectedContainer.cntr.cntrNo;
                 }
 
-                SaveLog("getMachineStatusChangedCallback UI",
-                            "[rfidBlck]" + mchn.rfidBlck
-                            + " [armgReadFlg]" + mchn.armgReadFlg + " [cntrNo]" + cntrNo
-                            );              
+                //SaveLog("getMachineStatusChangedCallback UI",
+                //            "[rfidBlck]" + mchn.rfidBlck
+                //            + " [armgReadFlg]" + mchn.armgReadFlg + " [cntrNo]" + cntrNo
+                //            );              
 
                 listHatchJob = new List<string>();
                 foreach (String s in mchn.hatchQcList)

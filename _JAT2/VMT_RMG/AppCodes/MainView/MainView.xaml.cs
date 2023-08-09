@@ -581,41 +581,41 @@ namespace VMT_RMG
 
         public void SaveLog(string sJob)  // nDataType 0 EEv2JobOrder, 
         {
-            try
-            {
-                string sRootPath = AppCfgMgr.GetAppDirectory();
-                string sDirPath = sRootPath + @"JOBCLICK_log\"
-                    + System.DateTime.Now.Year + "." + System.DateTime.Now.Month + "." + System.DateTime.Now.Day;
-                if (Directory.Exists(sDirPath) == false)
-                {
-                    Directory.CreateDirectory(sDirPath);
-                }
-                var dayBefore = System.DateTime.Now.AddDays(-3);
+            //try
+            //{
+            //    string sRootPath = AppCfgMgr.GetAppDirectory();
+            //    string sDirPath = sRootPath + @"JOBCLICK_log\"
+            //        + System.DateTime.Now.Year + "." + System.DateTime.Now.Month + "." + System.DateTime.Now.Day;
+            //    if (Directory.Exists(sDirPath) == false)
+            //    {
+            //        Directory.CreateDirectory(sDirPath);
+            //    }
+            //    var dayBefore = System.DateTime.Now.AddDays(-3);
 
-                var oldFolderPath = sRootPath + @"JOBCLICK_log\"
-                    + dayBefore.Year + "." + dayBefore.Month + "." + dayBefore.Day;
-                //dir.Attributes = dir.Attributes & ~FileAttributes.ReadOnly;
-                if (Directory.Exists(oldFolderPath) == true)
-                {
-                    var dir = new DirectoryInfo(oldFolderPath);
-                    dir.Delete(true);
-                }
+            //    var oldFolderPath = sRootPath + @"JOBCLICK_log\"
+            //        + dayBefore.Year + "." + dayBefore.Month + "." + dayBefore.Day;
+            //    //dir.Attributes = dir.Attributes & ~FileAttributes.ReadOnly;
+            //    if (Directory.Exists(oldFolderPath) == true)
+            //    {
+            //        var dir = new DirectoryInfo(oldFolderPath);
+            //        dir.Delete(true);
+            //    }
 
-                string logFilePath = @sDirPath + "/Log_" + System.DateTime.Now.Hour + ".txt";
+            //    string logFilePath = @sDirPath + "/Log_" + System.DateTime.Now.Hour + ".txt";
 
-                FileStream fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write);
-                StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8);
-                sw.WriteLine("//===========================================================================");
-                sw.WriteLine("[" + System.DateTime.Now.ToString("HH:mm:ss.fff", System.Globalization.DateTimeFormatInfo.InvariantInfo) + "]" + sJob);
-                sw.WriteLine("//===========================================================================\r\n");
-                sw.Flush();
-                sw.Close();
-                fs.Close();
-            }
-            catch (Exception ex)
-            {
+            //    FileStream fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write);
+            //    StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8);
+            //    sw.WriteLine("//===========================================================================");
+            //    sw.WriteLine("[" + System.DateTime.Now.ToString("HH:mm:ss.fff", System.Globalization.DateTimeFormatInfo.InvariantInfo) + "]" + sJob);
+            //    sw.WriteLine("//===========================================================================\r\n");
+            //    sw.Flush();
+            //    sw.Close();
+            //    fs.Close();
+            //}
+            //catch (Exception ex)
+            //{
 
-            }
+            //}
         }
 
         //public void Callback

@@ -842,16 +842,16 @@ namespace HessianComm
                                     this._callback(HessianCommType.GetMachineJobByKeys, this._parent.JobControl.getMachineJobByKeys((HessianList)data.obj));                                    
                                     break;
                                 case HessianCommType.GetMachineJobByKeys_New:
-                                    if (((HessianList)data.obj)[1].ToString() == "YT")
-                                        SaveLog("GetMachineJobByKeys Called", "");
+                                    //if (((HessianList)data.obj)[1].ToString() == "YT")
+                                    //    SaveLog("GetMachineJobByKeys Called", "");
                                     this._callback(HessianCommType.GetMachineJobByKeys_New, this._parent.VmtWorkOrderControl.getMachineJobByKeys((HessianList)data.obj));
                                     break;
                                 case HessianCommType.GetMachineJobByKeys_Sync:
                                     this._callback(HessianCommType.GetMachineJobByKeys_Sync, this._parent.VmtWorkOrderControl.getMachineJobByKeys_Sync((HessianList)data.obj));
                                     break;
                                 case HessianCommType.GetMachineStatusChanged:
-                                    if (((HessianList)data.obj)[1].ToString() == "YT")
-                                        SaveLog("GetMachineStatusChanged Called", "");
+                                    //if (((HessianList)data.obj)[1].ToString() == "YT")
+                                    //    SaveLog("GetMachineStatusChanged Called", "");
                                     this._callback(HessianCommType.GetMachineStatusChanged, this._parent.vmtMachineControl.getMachineStatusChanged((HessianList)data.obj));
                                     break;
                                 case HessianCommType.GetMachineJobByTruck:
@@ -1116,33 +1116,33 @@ namespace HessianComm
         }
         static public void SaveLog(string sJob, string sJobData)  // nDataType 0 EEv2JobOrder, 
         {
-            try
-            {
-                string sRootPath = AppDomain.CurrentDomain.BaseDirectory;
+            //try
+            //{
+            //    string sRootPath = AppDomain.CurrentDomain.BaseDirectory;
 
-                string sDirPath = sRootPath + @"{0}\Log\"
-                    + System.DateTime.Now.Year + "." + System.DateTime.Now.Month + "." + System.DateTime.Now.Day;
-                if (Directory.Exists(sDirPath) == false)
-                {
-                    Directory.CreateDirectory(sDirPath);
-                }
+            //    string sDirPath = sRootPath + @"{0}\Log\"
+            //        + System.DateTime.Now.Year + "." + System.DateTime.Now.Month + "." + System.DateTime.Now.Day;
+            //    if (Directory.Exists(sDirPath) == false)
+            //    {
+            //        Directory.CreateDirectory(sDirPath);
+            //    }
 
-                string logFilePath = @sDirPath + "/ITV_LOG_" + System.DateTime.Now.Hour + ".txt";
+            //    string logFilePath = @sDirPath + "/ITV_LOG_" + System.DateTime.Now.Hour + ".txt";
 
-                FileStream fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write);
-                StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8);
-                sw.WriteLine("//===========================================================================");
-                sw.WriteLine("[" + System.DateTime.Now.ToString() + "]" + sJob);
-                sw.WriteLine(sJobData);
-                sw.WriteLine("//===========================================================================\r\n");
-                sw.Flush();
-                sw.Close();
-                fs.Close();
-            }
-            catch (Exception ex)
-            {
+            //    FileStream fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write);
+            //    StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8);
+            //    sw.WriteLine("//===========================================================================");
+            //    sw.WriteLine("[" + System.DateTime.Now.ToString() + "]" + sJob);
+            //    sw.WriteLine(sJobData);
+            //    sw.WriteLine("//===========================================================================\r\n");
+            //    sw.Flush();
+            //    sw.Close();
+            //    fs.Close();
+            //}
+            //catch (Exception ex)
+            //{
 
-            }
+            //}
         }
     }
 }
