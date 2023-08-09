@@ -2861,22 +2861,26 @@ namespace VMT_ITV
                  )
                )
             {
+                arrivalCancel = "N";
                 TextBlock_Arrival.IsEnabled = true;
                 TextBlock_Arrival.Background = colorEnable;
             }
             else
             {
-                TextBlock_Arrival.IsEnabled = false;
                 if (select.type.jobStatus.Equals("A") ||
                     //(select.type.jobTp.Equals("LD") && select.ytJbSts.Equals("B")) ||
                     (select.type.jobTp.Equals("LD") && select.type.jobStatus.Equals("C") && select.ytJbSts.Equals("A") && select.workingMchn.mchnSts.Equals("L")) ||
                     (select.type.jobTp.Equals("DS") && select.type.jobStatus.Equals("Q") && select.ytJbSts.Equals("B"))
                    )
                 {
+                    // May 31 2023 BLUE Enable and arrivalCancel Y
+                    arrivalCancel = "Y";
+                    TextBlock_Arrival.IsEnabled = true;
                     TextBlock_Arrival.Background = Brushes.Blue;
                 }
                 else
                 {
+                    TextBlock_Arrival.IsEnabled = false;
                     TextBlock_Arrival.Background = colorDisable;
                 }
             }
