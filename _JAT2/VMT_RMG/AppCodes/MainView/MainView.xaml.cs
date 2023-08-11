@@ -532,7 +532,7 @@ namespace VMT_RMG
             }
             else if (jobOrder.type.jobStatus != "C")//if (jobOrder.type.jobStatus == "Q" || jobOrder.type.jobStatus == "A")
             {
-                SaveLog("Btn_JobSet_Click");
+                //SaveLog("Btn_JobSet_Click");
                 // 2017-02-02 : 제거요청
                 //if ((jobOrder.type.jobTp == "DS" //|| jobOrder.type.jobTp == "GI" || jobOrder.type.jobTp == "MI"       // 하차 작업시
                 //    || jobOrder.type.jobTp == "LC" || jobOrder.type.jobTp == "GC") &&
@@ -581,41 +581,32 @@ namespace VMT_RMG
 
         public void SaveLog(string sJob)  // nDataType 0 EEv2JobOrder, 
         {
-            //try
-            //{
-            //    string sRootPath = AppCfgMgr.GetAppDirectory();
-            //    string sDirPath = sRootPath + @"JOBCLICK_log\"
-            //        + System.DateTime.Now.Year + "." + System.DateTime.Now.Month + "." + System.DateTime.Now.Day;
-            //    if (Directory.Exists(sDirPath) == false)
-            //    {
-            //        Directory.CreateDirectory(sDirPath);
-            //    }
-            //    var dayBefore = System.DateTime.Now.AddDays(-3);
+            try
+            {
+                string sRootPath = AppCfgMgr.GetAppDirectory();
+                string sDirPath = sRootPath + @"{0}\Log\"
+                    + System.DateTime.Now.Year + "." + System.DateTime.Now.Month + "." + System.DateTime.Now.Day;
 
-            //    var oldFolderPath = sRootPath + @"JOBCLICK_log\"
-            //        + dayBefore.Year + "." + dayBefore.Month + "." + dayBefore.Day;
-            //    //dir.Attributes = dir.Attributes & ~FileAttributes.ReadOnly;
-            //    if (Directory.Exists(oldFolderPath) == true)
-            //    {
-            //        var dir = new DirectoryInfo(oldFolderPath);
-            //        dir.Delete(true);
-            //    }
+                if (Directory.Exists(sDirPath) == false)
+                {
+                    Directory.CreateDirectory(sDirPath);
+                }
 
-            //    string logFilePath = @sDirPath + "/Log_" + System.DateTime.Now.Hour + ".txt";
+                string logFilePath = @sDirPath + "/RTG_LOG_" + System.DateTime.Now.Hour + ".txt";
 
-            //    FileStream fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write);
-            //    StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8);
-            //    sw.WriteLine("//===========================================================================");
-            //    sw.WriteLine("[" + System.DateTime.Now.ToString("HH:mm:ss.fff", System.Globalization.DateTimeFormatInfo.InvariantInfo) + "]" + sJob);
-            //    sw.WriteLine("//===========================================================================\r\n");
-            //    sw.Flush();
-            //    sw.Close();
-            //    fs.Close();
-            //}
-            //catch (Exception ex)
-            //{
+                FileStream fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write);
+                StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8);
+                sw.WriteLine("//===========================================================================");
+                sw.WriteLine("[" + System.DateTime.Now.ToString("HH:mm:ss.fff", System.Globalization.DateTimeFormatInfo.InvariantInfo) + "]" + sJob);
+                sw.WriteLine("//===========================================================================\r\n");
+                sw.Flush();
+                sw.Close();
+                fs.Close();
+            }
+            catch (Exception ex)
+            {
 
-            //}
+            }
         }
 
         //public void Callback

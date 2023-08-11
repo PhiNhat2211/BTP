@@ -260,7 +260,8 @@ namespace VMT_RMG
         {
             var block = Convert.ToString(this.Btn_BlockText.Content);
             var bay = Convert.ToString(this.Btn_BayText.Content);
-            if (!String.IsNullOrEmpty(block))
+            // Aug 11 2023 CLT not call SetChangePosition
+            if (!String.IsNullOrEmpty(block) && !UserInfo.gUserID.Equals("CLT"))
                 VMT_Data_JAT2.VMT_DataMgr_RMG.SetChangePosition_ask(block, bay);
 
             Button btnSelected = (Button)sender;

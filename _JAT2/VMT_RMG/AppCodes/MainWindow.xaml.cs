@@ -724,30 +724,56 @@ namespace VMT_RMG
 
         #region [Callback Delegate Functions - RMG]
         #region [NotifyHandleLogApi]
+        public String typeToCheck = String.Empty;
+        public DateTime timeToCheck = DateTime.Now;
         public void NotifyHandleLogApi(bool isSend, HessianComm.HessianCommType type, Object obj)
         {
             this.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal,
                         new Action(delegate
                         {
-                            if (App.TEST_MODE)
+                            String typeToLog = Convert.ToString(type).Replace("_New", "").Replace("Background", "").Replace("Data", "").Replace("Multi", "4Multi").Replace("44Multi", "4Multi");
+                            String jsonObj = JsonConvert.SerializeObject(obj);
+                            String receiveTimeMsStr = String.Empty;
+                            String ipToPing = VMT_DataMgr.gHessianServerIP;
+                            // Aug 11 2023 Log to LogWin or File
+                            if (isSend)
                             {
-                                String jsonObj = JsonConvert.SerializeObject(obj);
-                                if (isSend)
+                                typeToCheck = typeToLog;
+                                timeToCheck = DateTime.Now;
+                                if (App.TEST_MODE)
                                 {
-                                    if (Convert.ToString(type).ToUpper().Contains("KEEPALIVE"))
+                                    if (typeToLog.ToUpper().Contains("KEEPALIVE"))
                                     {
-                                        String IpToPing = VMT_DataMgr.gHessianServerIP;
                                         LogWin.WriteLog("");
-                                        LogWin.WriteLog("MAC: " + GetSystemMacStr() + " | IP: " + GetDeviceIpStr() + " | PING TO " + IpToPing + ": " + GetPingTimeAverageStr(IpToPing, 4));
+                                        LogWin.WriteLog("MAC: " + GetSystemMacStr() + " | IP: " + GetDeviceIpStr() + " | PING TO " + ipToPing + ": " + GetPingTimeAverageStr(ipToPing, 4));
                                         LogWin.WriteLog("");
                                     }
-                                    LogWin.WriteLog("SEND: " + Convert.ToString(type) + " | " + jsonObj, true);
+                                    LogWin.WriteLog("SEND: " + typeToLog + " | " + jsonObj, true);
                                 }
                                 else
                                 {
-                                    LogWin.WriteLog("RECEIVE: " + Convert.ToString(type) + " | " + jsonObj, true);
-                                }
+                                    if (typeToLog.ToUpper().Contains("KEEPALIVE"))
+                                    {
+                                        PresentationMgr.MainView.SaveLog("MAC: " + GetSystemMacStr() + " | IP: " + GetDeviceIpStr() + " | PING TO " + ipToPing + ": " + GetPingTimeAverageStr(ipToPing, 4));
+                                    }
+                                    PresentationMgr.MainView.SaveLog("SEND: " + typeToLog + " | " + jsonObj);
+                                }                               
                             }
+                            else
+                            {
+                                if (typeToCheck.Equals(typeToLog))
+                                {
+                                    receiveTimeMsStr = Convert.ToString((DateTime.Now - timeToCheck).TotalMilliseconds);
+                                }
+                                if (App.TEST_MODE)
+                                {
+                                    LogWin.WriteLog("RECEIVE: " + typeToLog + (!String.IsNullOrEmpty(receiveTimeMsStr) ? " | " + receiveTimeMsStr + " ms" : "") + " | " + jsonObj);
+                                }
+                                else
+                                {
+                                    PresentationMgr.MainView.SaveLog("RECEIVE: " + typeToLog + (!String.IsNullOrEmpty(receiveTimeMsStr) ? " | " + receiveTimeMsStr + " ms" : "") + " | " + jsonObj);
+                                }
+                            }                         
                         }));
         }
         public string GetSystemMacStr()
@@ -809,18 +835,18 @@ namespace VMT_RMG
                         totalTime += reply.RoundtripTime;
                     }
                 }
-                double ingTimeAverage = totalTime / echoNum;
-                if (ingTimeAverage <= 0)
+                double pingTimeAverage = totalTime / echoNum;
+                if (pingTimeAverage <= 0)
                     returnStr = "FAILED";
                 else
-                    returnStr = Convert.ToString(totalTime / echoNum);
+                    returnStr = Convert.ToString(pingTimeAverage);
             }
             catch (Exception e)
             {
                 returnStr = e.Message;
             }
             return returnStr;
-        }
+        }       
         #endregion [NotifyHandleLogApi]
 
         #region [NotifyLogout]
@@ -1396,10 +1422,10 @@ namespace VMT_RMG
                       {
                           InterfaceMessageLoader.instance().WriteInterfaceMessage<RMG.VD_RMG_JobOrderList>(System.Reflection.MethodBase.GetCurrentMethod().Name, clone);
                           var pJob = clone.JobOrder.Find(x => x.type.jobStatus.Equals("P"));
-                          if (pJob != null)
-                              PresentationMgr.MainView.SaveLog("NotifyJobOrderRMG_processing");
-                          else
-                              PresentationMgr.MainView.SaveLog("NotifyJobOrderRMG_NonpProcessing");
+                          //if (pJob != null)
+                          //    PresentationMgr.MainView.SaveLog("NotifyJobOrderRMG_processing");
+                          //else
+                          //    PresentationMgr.MainView.SaveLog("NotifyJobOrderRMG_NonpProcessing");
 
                           //20200221 error display joblist when wrkCd == 1 or 2 after ProcessPLC
 
@@ -3348,7 +3374,7 @@ namespace VMT_RMG
             this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
                         new Action(delegate
                         {
-                            PresentationMgr.MainView.SaveLog("NotifySetJobStatus");
+                            //PresentationMgr.MainView.SaveLog("NotifySetJobStatus");
                             //VMT_Data_JAT2.VMT_DataMgr_Common.JobOrderList_Ask();
                             //if (VMT_Data_JAT2.Objects.Common.BlckVal != "")
                             //{
