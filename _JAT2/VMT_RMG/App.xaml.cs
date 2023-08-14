@@ -35,7 +35,8 @@ namespace VMT_RMG
 
         // Common for All Site
         static public String KeyCLTAgent = @"SOFTWARE\CyberLogitec\CLT Agent for Windows";
-        static public Boolean TEST_MODE = true; // true - test mode, false - real mode
+        static public Boolean TEST_MODE = false; // true - test mode, false - real mode
+        static public Boolean TEST_WRITE_MODE = false; // TRUE - Write log to File
         static public Boolean STANDALONE_MODE = false; // true - stand alone mode, false - real mode
         static public Boolean MESSAGE_CAPTURE_MODE = false; // true - capture mode, false - no capture
 

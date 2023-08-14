@@ -64,6 +64,7 @@ namespace VMT_RMG
         {
             //[Application Options]
             defCfgDataSet.Add("IsTestMode", new ConfigDataSet("AppCfgDoc/Options/IsTestMode", "0"));
+            defCfgDataSet.Add("IsTestWriteMode", new ConfigDataSet("AppCfgDoc/Options/IsTestWriteMode", "0"));
             defCfgDataSet.Add("IsStandAlone", new ConfigDataSet("AppCfgDoc/Options/IsStandAlone", "0"));
             defCfgDataSet.Add("IsMessageCapture", new ConfigDataSet("AppCfgDoc/Options/IsMessageCapture", "0"));
             defCfgDataSet.Add("ShowAppUI", new ConfigDataSet("AppCfgDoc/Options/ShowAppUI", "1"));

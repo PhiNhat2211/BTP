@@ -422,36 +422,34 @@ namespace VMT_ITV
             }
         }
 
-        public void SaveLog(string sJob, string sJobData)  // nDataType 0 EEv2JobOrder, 
+        public void SaveLog(string sJob)
         {
-            //try
-            //{
-            //    string sRootPath = AppCfgMgr.GetAppDirectory();
+            try
+            {
+                string sRootPath = AppCfgMgr.GetAppDirectory();
+                string sDirPath = sRootPath + @"{0}\Log\"
+                    + System.DateTime.Now.Year + "." + System.DateTime.Now.Month + "." + System.DateTime.Now.Day;
 
-            //    string sDirPath = sRootPath + @"{0}\Log\"
-            //        + System.DateTime.Now.Year + "." + System.DateTime.Now.Month + "." + System.DateTime.Now.Day;
-              
-            //    if (Directory.Exists(sDirPath) == false)
-            //    {
-            //        Directory.CreateDirectory(sDirPath);
-            //    }
+                if (Directory.Exists(sDirPath) == false)
+                {
+                    Directory.CreateDirectory(sDirPath);
+                }
 
-            //    string logFilePath = @sDirPath + "/ITV_LOG_" + System.DateTime.Now.Hour + ".txt";
+                string logFilePath = @sDirPath + "/ITV_LOG_" + System.DateTime.Now.Hour + ".txt";
 
-            //    FileStream fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write);
-            //    StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8);
-            //    sw.WriteLine("//===========================================================================");
-            //    sw.WriteLine("[" + System.DateTime.Now.ToString() + "]" + sJob);
-            //    sw.WriteLine(sJobData);
-            //    sw.WriteLine("//===========================================================================\r\n");
-            //    sw.Flush();
-            //    sw.Close();
-            //    fs.Close();
-            //}
-            //catch (Exception ex)
-            //{
+                FileStream fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write);
+                StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8);
+                sw.WriteLine("//===========================================================================");
+                sw.WriteLine("[" + System.DateTime.Now.ToString("HH:mm:ss.fff", System.Globalization.DateTimeFormatInfo.InvariantInfo) + "] " + sJob);
+                sw.WriteLine("//===========================================================================\r\n");
+                sw.Flush();
+                sw.Close();
+                fs.Close();
+            }
+            catch (Exception ex)
+            {
 
-            //}
+            }
         }
 
         private void LayoutRoot_Loaded(object sender, RoutedEventArgs e)
@@ -1756,7 +1754,7 @@ namespace VMT_ITV
             }
             catch (Exception ex)
             {
-                SaveLog("[Exception getMachineJobByKeys UI]", "[Exception message]: " + ex.Message + "[InnerException]: " + ex.InnerException + Environment.NewLine
+                SaveLog("[Exception getMachineJobByKeys UI]" + " | " + "[Exception message]: " + ex.Message + "[InnerException]: " + ex.InnerException + Environment.NewLine
                     + "[Source]:" + ex.Source + Environment.NewLine +"[StackTrace]:" + ex.StackTrace);
             }
         }
@@ -1836,7 +1834,7 @@ namespace VMT_ITV
             }
             catch(Exception ex)
             {
-                SaveLog("[Exception GetMachineStatusChanged UI]", "[Exception message]: " + ex.Message + "[InnerException]: " + ex.InnerException + Environment.NewLine
+                SaveLog("[Exception GetMachineStatusChanged UI]" + " | " + "[Exception message]: " + ex.Message + "[InnerException]: " + ex.InnerException + Environment.NewLine
                     + "[Source]:" + ex.Source + Environment.NewLine + "[StackTrace]:" + ex.StackTrace);
             }   
         }

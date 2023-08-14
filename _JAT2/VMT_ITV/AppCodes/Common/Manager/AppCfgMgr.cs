@@ -66,6 +66,7 @@ namespace VMT_ITV
         {
             //[Application Options]
             defCfgDataSet.Add("IsTestMode", new ConfigDataSet("AppCfgDoc/Options/IsTestMode", "0"));
+            defCfgDataSet.Add("IsTestWriteMode", new ConfigDataSet("AppCfgDoc/Options/IsTestWriteMode", "0"));
             defCfgDataSet.Add("IsStandAlone", new ConfigDataSet("AppCfgDoc/Options/IsStandAlone", "0"));
             defCfgDataSet.Add("IsMessageCapture", new ConfigDataSet("AppCfgDoc/Options/IsMessageCapture", "0"));
             defCfgDataSet.Add("CalibrationPassword", new ConfigDataSet("AppCfgDoc/Options/CalibrationPassword", "9900"));

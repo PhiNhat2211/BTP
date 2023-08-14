@@ -597,7 +597,7 @@ namespace VMT_RMG
                 FileStream fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write);
                 StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8);
                 sw.WriteLine("//===========================================================================");
-                sw.WriteLine("[" + System.DateTime.Now.ToString("HH:mm:ss.fff", System.Globalization.DateTimeFormatInfo.InvariantInfo) + "]" + sJob);
+                sw.WriteLine("[" + System.DateTime.Now.ToString("HH:mm:ss.fff", System.Globalization.DateTimeFormatInfo.InvariantInfo) + "] " + sJob);
                 sw.WriteLine("//===========================================================================\r\n");
                 sw.Flush();
                 sw.Close();

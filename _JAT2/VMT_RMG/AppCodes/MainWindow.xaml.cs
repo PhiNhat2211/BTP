@@ -275,6 +275,11 @@ namespace VMT_RMG
             if (strTestMode == "1") App.TEST_MODE = true; // true - test mode, false - real mode
             else App.TEST_MODE = false; // true - test mode, false - real mode
 
+            string strTestWriteMode;
+            strTestWriteMode = AppCfgMgr.Singleton.GetValueByKey("IsTestWriteMode");
+            if (strTestWriteMode == "1") App.TEST_WRITE_MODE = true;
+            else App.TEST_WRITE_MODE = false;
+
             string strStandAlone;
             strStandAlone = AppCfgMgr.Singleton.GetValueByKey("IsStandAlone");
             if (strStandAlone == "1") App.STANDALONE_MODE = true; // true - stand alone mode, false - real mode
@@ -750,7 +755,7 @@ namespace VMT_RMG
                                     }
                                     LogWin.WriteLog("SEND: " + typeToLog + " | " + jsonObj, true);
                                 }
-                                else
+                                if (App.TEST_WRITE_MODE)
                                 {
                                     if (typeToLog.ToUpper().Contains("KEEPALIVE"))
                                     {
@@ -769,7 +774,7 @@ namespace VMT_RMG
                                 {
                                     LogWin.WriteLog("RECEIVE: " + typeToLog + (!String.IsNullOrEmpty(receiveTimeMsStr) ? " | " + receiveTimeMsStr + " ms" : "") + " | " + jsonObj);
                                 }
-                                else
+                                if (App.TEST_WRITE_MODE)
                                 {
                                     PresentationMgr.MainView.SaveLog("RECEIVE: " + typeToLog + (!String.IsNullOrEmpty(receiveTimeMsStr) ? " | " + receiveTimeMsStr + " ms" : "") + " | " + jsonObj);
                                 }

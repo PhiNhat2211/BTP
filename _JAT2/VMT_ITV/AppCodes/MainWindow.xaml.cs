@@ -29,6 +29,9 @@ using System.Net.NetworkInformation;
 using System.IO;
 using Microsoft.Win32;
 using static Common.Util.Registry64;
+using Newtonsoft.Json;
+using System.Net;
+using System.Net.Sockets;
 
 namespace VMT_ITV
 {
@@ -43,7 +46,8 @@ namespace VMT_ITV
         //- Build Relation Configuration
         // Common for All Site
         static public String KeyCLTAgent = @"SOFTWARE\CyberLogitec\CLT Agent for Windows";
-        static public Boolean TEST_MODE = true; // true - test mode, false - real mode
+        static public Boolean TEST_MODE = false; // true - test mode, false - real mode
+        static public Boolean TEST_WRITE_MODE = false; // TRUE - Write log to File
         static public Boolean STANDALONE_MODE = false; // true - stand alone mode, false - real mode
         static public Boolean MESSAGE_CAPTURE_MODE = false; // true - stand alone mode, false - real mode
 
@@ -158,6 +162,10 @@ namespace VMT_ITV
 
             // Create LogWindow
             MainWindow.LogWin = new LogWindow();
+            if (TEST_MODE)
+            {
+                LogWin.Show();
+            }
 
             gSoundPlayer = new System.Media.SoundPlayer(Properties.Resources._2014050108012211);
             gSoundPlayer_dingdong = new System.Media.SoundPlayer(Properties.Resources.dingdong_3);
@@ -365,6 +373,11 @@ namespace VMT_ITV
             if (strTestMode == "1") TEST_MODE = true; // true - test mode, false - real mode
             else TEST_MODE = false; // true - test mode, false - real mode
 
+            string strTestWriteMode;
+            strTestWriteMode = AppCfgMgr.Singleton.GetValueByKey("IsTestWriteMode");
+            if (strTestWriteMode == "1") TEST_WRITE_MODE = true;
+            else TEST_WRITE_MODE = false;
+
             string strStandAlone;
             strStandAlone = AppCfgMgr.Singleton.GetValueByKey("IsStandAlone");
             if (strStandAlone == "1") STANDALONE_MODE = true; // true - stand alone mode, false - real mode
@@ -506,6 +519,8 @@ namespace VMT_ITV
 
         private void InitAppCallbackFunctions()
         {
+            VMT_Data_JAT2.VMT_DataMgr_Common_Callback.SetCallback_NotifyHandleLogApi(new VMT_Data_JAT2.VMT_DataMgr_Common_Callback.Callback_NotifyHandleLogApi(NotifyHandleLogApi));
+
             VMT_Data_JAT2.VMT_DataMgr_Common_Callback.static_NotifyGPSStatus = new VMT_Data_JAT2.VMT_DataMgr_Common_Callback.Callback_NotifyGPSStatus(NotifyGPSStatus);
             VMT_Data_JAT2.VMT_DataMgr_Common_Callback.SetCallBack_NotifyGPSStatus(VMT_Data_JAT2.VMT_DataMgr_Common_Callback.static_NotifyGPSStatus);
 
@@ -980,6 +995,132 @@ namespace VMT_ITV
 
         #region [Notify]
 
+        #region [NotifyHandleLogApi]
+        public String typeToCheck = String.Empty;
+        public DateTime timeToCheck = DateTime.Now;
+        public void NotifyHandleLogApi(bool isSend, HessianComm.HessianCommType type, Object obj)
+        {
+            this.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal,
+                        new Action(delegate
+                        {
+                            String typeToLog = Convert.ToString(type).Replace("_New", "").Replace("Background", "").Replace("Data", "").Replace("Multi", "4Multi").Replace("44Multi", "4Multi");
+                            String jsonObj = JsonConvert.SerializeObject(obj);
+                            String receiveTimeMsStr = String.Empty;
+                            String ipToPing = VMT_DataMgr.gHessianServerIP;
+                            // Aug 11 2023 Log to LogWin or File
+                            if (isSend)
+                            {
+                                typeToCheck = typeToLog;
+                                timeToCheck = DateTime.Now;
+                                if (TEST_MODE)
+                                {
+                                    if (typeToLog.ToUpper().Contains("KEEPALIVE"))
+                                    {
+                                        LogWin.WriteLog("");
+                                        LogWin.WriteLog("MAC: " + GetSystemMacStr() + " | IP: " + GetDeviceIpStr() + " | PING TO " + ipToPing + ": " + GetPingTimeAverageStr(ipToPing, 4));
+                                        LogWin.WriteLog("");
+                                    }
+                                    LogWin.WriteLog("SEND: " + typeToLog + " | " + jsonObj, true);
+                                }
+                                if (TEST_WRITE_MODE)
+                                {
+                                    if (typeToLog.ToUpper().Contains("KEEPALIVE"))
+                                    {
+                                        PresentationMgr.MainView.SaveLog("MAC: " + GetSystemMacStr() + " | IP: " + GetDeviceIpStr() + " | PING TO " + ipToPing + ": " + GetPingTimeAverageStr(ipToPing, 4));
+                                    }
+                                    PresentationMgr.MainView.SaveLog("SEND: " + typeToLog + " | " + jsonObj);
+                                }
+                            }
+                            else
+                            {
+                                if (typeToCheck.Equals(typeToLog))
+                                {
+                                    receiveTimeMsStr = Convert.ToString((DateTime.Now - timeToCheck).TotalMilliseconds);
+                                }
+                                if (TEST_MODE)
+                                {
+                                    LogWin.WriteLog("RECEIVE: " + typeToLog + (!String.IsNullOrEmpty(receiveTimeMsStr) ? " | " + receiveTimeMsStr + " ms" : "") + " | " + jsonObj);
+                                }
+                                if (TEST_WRITE_MODE)
+                                {
+                                    PresentationMgr.MainView.SaveLog("RECEIVE: " + typeToLog + (!String.IsNullOrEmpty(receiveTimeMsStr) ? " | " + receiveTimeMsStr + " ms" : "") + " | " + jsonObj);
+                                }
+                            }
+                        }));
+        }
+        public string GetSystemMacStr()
+        {
+            String returnStr = String.Empty;
+            try
+            {
+                String firstMacAddress = NetworkInterface.GetAllNetworkInterfaces()
+                    .Where(nic => nic.OperationalStatus == OperationalStatus.Up && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                    .Select(nic => nic.GetPhysicalAddress().ToString())
+                    .FirstOrDefault();
+
+                returnStr = firstMacAddress;
+                if (String.IsNullOrEmpty(returnStr))
+                    returnStr = "EMPTY";
+            }
+            catch (Exception e)
+            {
+                returnStr = e.Message;
+            }
+            return returnStr;
+        }
+        public String GetDeviceIpStr()
+        {
+            String returnStr = String.Empty;
+            try
+            {
+                var host = Dns.GetHostEntry(Dns.GetHostName());
+                foreach (var ip in host.AddressList)
+                {
+                    if (ip.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        returnStr += Convert.ToString(ip) + " | ";
+                    }
+                }
+                if (String.IsNullOrEmpty(returnStr))
+                    returnStr = "EMPTY";
+            }
+            catch (Exception e)
+            {
+                returnStr = e.Message;
+            }
+            return returnStr;
+        }
+        public String GetPingTimeAverageStr(string host, int echoNum)
+        {
+            String returnStr = String.Empty;
+            try
+            {
+                long totalTime = 0;
+                int timeout = 120;
+                Ping pingSender = new Ping();
+
+                for (int i = 0; i < echoNum; i++)
+                {
+                    PingReply reply = pingSender.Send(host, timeout);
+                    if (reply.Status == IPStatus.Success)
+                    {
+                        totalTime += reply.RoundtripTime;
+                    }
+                }
+                double pingTimeAverage = totalTime / echoNum;
+                if (pingTimeAverage <= 0)
+                    returnStr = "FAILED";
+                else
+                    returnStr = Convert.ToString(pingTimeAverage);
+            }
+            catch (Exception e)
+            {
+                returnStr = e.Message;
+            }
+            return returnStr;
+        }
+        #endregion [NotifyHandleLogApi]
+
         #region [NotifyGPSStatus]
         public void NotifyGPSStatus(int value)
         {
@@ -1078,7 +1219,7 @@ namespace VMT_ITV
                                     Timer.Start();
                                 if(isLoggedWhenDiscon == false)
                                 {
-                                    LogWin.WriteLog("Program Service Re-Stated");
+                                    LogWin.WriteLog("Program Service Re-Started");
                                     isLoggedWhenDiscon = true;
                                 }
                             }
