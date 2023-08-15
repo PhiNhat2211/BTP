@@ -51,7 +51,7 @@ namespace VMT_RMG
                             if (newline)
                                 log += "\r\n";
                             //// Add Time Value
-                            string now = DateTime.Now.ToString("[HH:MM:ss]");
+                            string now = DateTime.Now.ToString("HH:mm:ss.fff", System.Globalization.DateTimeFormatInfo.InvariantInfo);
                             log = now + " " + log;
                         }
                         else

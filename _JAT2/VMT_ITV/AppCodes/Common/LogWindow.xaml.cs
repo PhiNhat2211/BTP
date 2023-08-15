@@ -49,7 +49,7 @@ namespace VMT_ITV
                             log += "\r\n";
 
                         // Add Time Value
-                        string now = DateTime.Now.ToString("[HH:MM:ss]");
+                        string now = DateTime.Now.ToString("HH:mm:ss.fff", System.Globalization.DateTimeFormatInfo.InvariantInfo);
                         log = now + " " + log;
 
                         string strLog = log;
