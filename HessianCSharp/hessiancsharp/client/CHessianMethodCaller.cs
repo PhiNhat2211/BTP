@@ -225,7 +225,10 @@ namespace hessiancsharp.client
                 }
 
                 sInStream = webResponse.GetResponseStream();
-                
+
+                sInStream.ReadTimeout = 15000;
+                sInStream.WriteTimeout = 15000;
+
                 // Http Response End
                 //var endDatetime = DateTime.Now;
                 //System.Diagnostics.Trace.WriteLine("[VMT RMG Http Timestamp]" + endDatetime.ToString("[HH:mm:ss:fff]") + methodInfo.ReturnParameter.Member.Name + "(-)");
