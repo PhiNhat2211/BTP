@@ -93,6 +93,7 @@ namespace VMT_RMG
         public bool flgNeedReset = true;
         public bool showSetting = false, showCHGLOC = false, showViewINV = false, showVBlock = false; //20201008 show/hide buttons (BP#471, 472, 475): setting (login view), btn_chg_loc (main view), mainview info
         public bool enableBayViewSelection = false;
+        public bool showInvCorrection = false;
         public String cntrSelected = String.Empty;
         public bool viewBLockList = false, callFirst1Time = false; //20201020 for new API getBlockListForYardSector
         public VMT_Data_JAT2.Objects.Common.VmtMachine machineLocationPrevious = null; //20201102 if value same -> no reload bayview
@@ -8588,7 +8589,10 @@ namespace VMT_RMG
             PresentationMgr.MainView.Col_ChgLoc.Width = new GridLength((showCHGLOC ? 14 : 0), GridUnitType.Star);
             if (!showViewINV) PresentationMgr.MainView.UC_InfomationView.UC_BlockBayInfo.Btn_V_Block.IsEnabled = false;
         }
-
+        public void showHideButtonsGetConfigValue()
+        {
+            MainView.Image_Lock.Visibility = showInvCorrection ? Visibility.Visible : Visibility.Hidden;
+        }
         public static String BayRemoveChars(String value)
         {
             return new string(value.Where(char.IsDigit).ToArray());

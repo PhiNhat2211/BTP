@@ -885,6 +885,72 @@ namespace VMT_RMG
             this.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal,
                         new Action(delegate
                         {
+                            // Sep 08 2023 Check config to show/hide InventoryCorrection Image (for moving container)
+                            if (getConfigValueKey == "ENABLE_RTG_VMT_INV_CORRECTION_CODE")
+                            {
+                                PresentationMgr.Singleton.showInvCorrection = false;
+                                if (value.Contains(UserInfo.gMchnID))
+                                {
+                                    PresentationMgr.Singleton.showInvCorrection = true;
+                                }
+                                else
+                                {
+                                    String mchnLetterStr = String.Empty;
+                                    String mchnNumberStr = String.Empty;
+                                    foreach (char c in UserInfo.gMchnID)
+                                    {
+                                        if (Char.IsLetter(c))
+                                            mchnLetterStr += c;
+                                        else if (Char.IsNumber(c))
+                                            mchnNumberStr += c;
+                                    }
+                                    Boolean mchnNumberParseIntBool = Int32.TryParse(mchnNumberStr, out int mchnNumberInt);
+                                    if (!String.IsNullOrEmpty(value))
+                                    {
+                                        String[] mchnIdGrpArr = value.Split(',');
+                                        foreach (String mchIdGrp in mchnIdGrpArr)
+                                        {
+                                            String startLetterStr = String.Empty;
+                                            String startNumberStr = String.Empty;
+                                            String endLetterStr = String.Empty;
+                                            String endNumberStr = String.Empty;
+                                            Boolean mark = false;
+                                            foreach (char c in mchIdGrp)
+                                            {
+                                                if (!mark && c == '-')
+                                                    mark = true;
+                                                if (!mark)
+                                                {
+                                                    if (Char.IsLetter(c))
+                                                        startLetterStr += c;
+                                                    else if (Char.IsNumber(c))
+                                                        startNumberStr += c;
+                                                }
+                                                else
+                                                {
+                                                    if (Char.IsLetter(c))
+                                                        endLetterStr += c;
+                                                    else if (Char.IsNumber(c))
+                                                        endNumberStr += c;
+                                                }
+                                            }
+                                            Boolean startNumberParseIntBool = Int32.TryParse(startNumberStr, out int startNumberInt);
+                                            Boolean endNumberParseIntBool = Int32.TryParse(endNumberStr, out int endNumberInt);
+                                            if (mchnLetterStr == startLetterStr && mchnLetterStr == endLetterStr &&
+                                                mchnNumberParseIntBool && startNumberParseIntBool && endNumberParseIntBool &&
+                                                mchnNumberInt >= startNumberInt && mchnNumberInt <= endNumberInt)
+                                            {
+                                                PresentationMgr.Singleton.showInvCorrection = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                PresentationMgr.Singleton.showHideButtonsGetConfigValue();
+                                // Sep 08 2023 Check config to show/hide InventoryCorrection Image (for moving container) first
+                                getConfigValueKey = "ENABLE_RTG_VMT_BAY_VIEW_SELECTION_YN";
+                                VMT_Data_JAT2.VMT_DataMgr_Common.GetConfigValue_Ask(getConfigValueKey);
+                            }
                             if (getConfigValueKey == "ENABLE_RTG_VMT_BAY_VIEW_SELECTION_YN")
                             {
                                 if (value == "Y")
@@ -956,8 +1022,8 @@ namespace VMT_RMG
                                             }
                                         }
                                     }
-                                }
-                            }
+                                }                               
+                            }                          
                         }));
         }
         #endregion [GetConfigValue]
@@ -1262,7 +1328,7 @@ namespace VMT_RMG
 
                             if (!"CLT".Equals(RMG.RMG_User.gUserID))
                             {
-                                getConfigValueKey = "ENABLE_RTG_VMT_BAY_VIEW_SELECTION_YN";
+                                getConfigValueKey = "ENABLE_RTG_VMT_INV_CORRECTION_CODE";
                                 VMT_Data_JAT2.VMT_DataMgr_Common.GetConfigValue_Ask(getConfigValueKey);
 
                                 VMT_Data_JAT2.VMT_DataMgr_Common.StartPolling_Ask(HessianComm.HessianCommType.SetVMTMachineStatus);
@@ -1270,6 +1336,8 @@ namespace VMT_RMG
                             else
                             {
                                 PresentationMgr.Singleton.enableBayViewSelection = true;
+                                PresentationMgr.Singleton.showInvCorrection = true;
+                                PresentationMgr.Singleton.showHideButtonsGetConfigValue();
                             }
                         }));
         }
