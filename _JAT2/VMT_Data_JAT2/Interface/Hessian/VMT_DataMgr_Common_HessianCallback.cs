@@ -473,8 +473,10 @@ namespace VMT_Data_JAT2
                                 simpleBlock.BlcName = Convert.ToString(hashBlock["blck"]);
                                 simpleBlock.IsVirtual = Convert.ToBoolean(hashBlock["isVrtl"]);
                                 //simpleBlock.isBolBlck = Convert.ToBoolean(hashBlock["isBolBlck"]);
-                                simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
-                                    Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                                // Sep 18 2023 always show row A first
+                                simpleBlock.Direction = Objects.Common.Row_Direction.TB;
+                                //simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
+                                //    Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
                                 simpleBlock.userCode = Convert.ToString(hashBlock["userCode"]);
                                 simpleBlock.loginUser = Convert.ToString(hashBlock["loginUser"]);
 
@@ -621,8 +623,10 @@ namespace VMT_Data_JAT2
 
                                 simpleBlock.IsVirtual = Convert.ToBoolean(hashBlock["isVrtl"]);
                                 simpleBlock.isBolBlck = Convert.ToBoolean(hashBlock["isBolBlck"]);
-                                simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
-                                    Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                                // Sep 18 2023 always show row A first
+                                simpleBlock.Direction = Objects.Common.Row_Direction.TB;
+                                //simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
+                                //    Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
 
                                 if (!blockInfo.DicBlock.ContainsKey(simpleBlock.BlcName))
                                     blockInfo.DicBlock.Add(simpleBlock.BlcName, simpleBlock);
@@ -665,8 +669,10 @@ namespace VMT_Data_JAT2
                                 simpleBlock.BlcName = Convert.ToString(hashBlock["blck"]);
                                 simpleBlock.IsVirtual = Convert.ToBoolean(hashBlock["isVrtl"]);
                                 //simpleBlock.isBolBlck = Convert.ToBoolean(hashBlock["isBolBlck"]);
-                                simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
-                                    Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                                // Sep 18 2023 always show row A first
+                                simpleBlock.Direction = Objects.Common.Row_Direction.TB;
+                                //simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
+                                //    Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
                                 simpleBlock.userCode = Convert.ToString(hashBlock["userCode"]);
                                 simpleBlock.loginUser = Convert.ToString(hashBlock["loginUser"]);
 
@@ -740,8 +746,10 @@ namespace VMT_Data_JAT2
                             simpleBlock.isBolBlck = Convert.ToBoolean(hashBlock["isBolBlck"]);
 
                             simpleBlock.IsVirtual = Convert.ToBoolean(hashBlock["isVrtl"]);
-                            simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
-                                Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                            // Sep 18 2023 always show row A first
+                            simpleBlock.Direction = Objects.Common.Row_Direction.TB;
+                            //simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
+                            //    Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
                             simpleBlock.MaxTier = Convert.ToInt32(hashBlock["maxTier"]);
                             simpleBlock.MaxTier = 7;
 
@@ -834,8 +842,10 @@ namespace VMT_Data_JAT2
 
                             simpleBlock.BlcName = Convert.ToString(hashBlock["blck"]);
                             simpleBlock.IsVirtual = Convert.ToBoolean(hashBlock["isVrtl"]);
-                            simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
-                                Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                            // Sep 18 2023 always show row A first
+                            simpleBlock.Direction = Objects.Common.Row_Direction.TB;
+                            //simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
+                            //    Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
                             simpleBlock.MaxTier = Convert.ToInt32(hashBlock["maxTier"]);
 
                             if (hashBlock["blckBay"] is ArrayList)
@@ -917,8 +927,10 @@ namespace VMT_Data_JAT2
 
                             simpleBlock.BlcName = Convert.ToString(hashBlock["blck"]);
                             simpleBlock.IsVirtual = Convert.ToBoolean(hashBlock["isVrtl"]);
-                            simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
-                                Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                            // Sep 18 2023 always show row A first
+                            simpleBlock.Direction = Objects.Common.Row_Direction.TB;
+                            //simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
+                            //    Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
                             simpleBlock.MaxTier = Convert.ToInt32(hashBlock["maxTier"]);
 
                             if (hashBlock["blckBay"] is ArrayList)
@@ -1001,8 +1013,10 @@ namespace VMT_Data_JAT2
 
                             simpleBlock.BlcName = Convert.ToString(hashBlock["blck"]);
                             simpleBlock.IsVirtual = Convert.ToBoolean(hashBlock["isVrtl"]);
-                            simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
-                                Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                            // Sep 18 2023 always show row A first
+                            simpleBlock.Direction = Objects.Common.Row_Direction.TB;
+                            //simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
+                            //    Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
                             simpleBlock.MaxTier = Convert.ToInt32(hashBlock["maxTier"]);
 
                             if (hashBlock["blckBay"] is ArrayList)
@@ -1085,8 +1099,10 @@ namespace VMT_Data_JAT2
 
                             simpleBlock.BlcName = Convert.ToString(hashBlock["blck"]);
                             simpleBlock.IsVirtual = Convert.ToBoolean(hashBlock["isVrtl"]);
-                            simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
-                                Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                            // Sep 18 2023 always show row A first
+                            simpleBlock.Direction = Objects.Common.Row_Direction.TB;
+                            //simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
+                            //    Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
                             simpleBlock.MaxTier = Convert.ToInt32(hashBlock["maxTier"]);
 
                             if (hashBlock["blckBay"] is ArrayList)
