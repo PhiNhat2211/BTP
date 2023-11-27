@@ -476,8 +476,10 @@ namespace VMT_Data_JAT2
                                 // Sep 18 2023 always show row A first
                                 //simpleBlock.Direction = Objects.Common.Row_Direction.TB;
                                 // Nov 23 2023 revert the logic
-                                simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
-                                    Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                                //simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
+                                //    Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                                // Nov 27 2023 always show row G first
+                                simpleBlock.Direction = Objects.Common.Row_Direction.BT;
                                 simpleBlock.userCode = Convert.ToString(hashBlock["userCode"]);
                                 simpleBlock.loginUser = Convert.ToString(hashBlock["loginUser"]);
 
@@ -627,8 +629,10 @@ namespace VMT_Data_JAT2
                                 // Sep 18 2023 always show row A first
                                 //simpleBlock.Direction = Objects.Common.Row_Direction.TB;
                                 // Nov 23 2023 revert the logic
-                                simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
-                                    Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                                //simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
+                                //    Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                                // Nov 27 2023 always show row G first
+                                simpleBlock.Direction = Objects.Common.Row_Direction.BT;
 
                                 if (!blockInfo.DicBlock.ContainsKey(simpleBlock.BlcName))
                                     blockInfo.DicBlock.Add(simpleBlock.BlcName, simpleBlock);
@@ -674,8 +678,11 @@ namespace VMT_Data_JAT2
                                 // Sep 18 2023 always show row A first
                                 //simpleBlock.Direction = Objects.Common.Row_Direction.TB;
                                 // Nov 23 2023 revert the logic
-                                simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
-                                    Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                                //simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
+                                //    Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                                // Nov 27 2023 always show row G first
+                                simpleBlock.Direction = Objects.Common.Row_Direction.BT;
+
                                 simpleBlock.userCode = Convert.ToString(hashBlock["userCode"]);
                                 simpleBlock.loginUser = Convert.ToString(hashBlock["loginUser"]);
 
@@ -752,8 +759,11 @@ namespace VMT_Data_JAT2
                             // Sep 18 2023 always show row A first
                             //simpleBlock.Direction = Objects.Common.Row_Direction.TB;
                             // Nov 23 2023 revert the logic
-                            simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
-                                Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                            //simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
+                            //    Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                            // Nov 27 2023 always show row G first
+                            simpleBlock.Direction = Objects.Common.Row_Direction.BT;
+
                             simpleBlock.MaxTier = Convert.ToInt32(hashBlock["maxTier"]);
                             simpleBlock.MaxTier = 7;
 
@@ -849,8 +859,11 @@ namespace VMT_Data_JAT2
                             // Sep 18 2023 always show row A first
                             //simpleBlock.Direction = Objects.Common.Row_Direction.TB;
                             // Nov 23 2023 revert the logic
-                            simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
-                                Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                            //simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
+                            //    Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                            // Nov 27 2023 always show row G first
+                            simpleBlock.Direction = Objects.Common.Row_Direction.BT;
+
                             simpleBlock.MaxTier = Convert.ToInt32(hashBlock["maxTier"]);
 
                             if (hashBlock["blckBay"] is ArrayList)
@@ -935,8 +948,10 @@ namespace VMT_Data_JAT2
                             // Sep 18 2023 always show row A first
                             //simpleBlock.Direction = Objects.Common.Row_Direction.TB;
                             // Nov 23 2023 revert the logic
-                            simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
-                                Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                            //simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
+                            //    Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                            // Nov 27 2023 always show row G first
+                            simpleBlock.Direction = Objects.Common.Row_Direction.BT;
                             simpleBlock.MaxTier = Convert.ToInt32(hashBlock["maxTier"]);
 
                             if (hashBlock["blckBay"] is ArrayList)
@@ -1022,8 +1037,10 @@ namespace VMT_Data_JAT2
                             // Sep 18 2023 always show row A first
                             //simpleBlock.Direction = Objects.Common.Row_Direction.TB;
                             // Nov 23 2023 revert the logic
-                            simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
-                                Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                            //simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
+                            //    Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                            // Nov 27 2023 always show row G first
+                            simpleBlock.Direction = Objects.Common.Row_Direction.BT;
                             simpleBlock.MaxTier = Convert.ToInt32(hashBlock["maxTier"]);
 
                             if (hashBlock["blckBay"] is ArrayList)
@@ -1109,8 +1126,10 @@ namespace VMT_Data_JAT2
                             // Sep 18 2023 always show row A first
                             //simpleBlock.Direction = Objects.Common.Row_Direction.TB;
                             // Nov 23 2023 revert the logic
-                            simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
-                                Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                            //simpleBlock.Direction = Convert.ToString(hashBlock["rowDir"]).Equals("TB") ?
+                            //    Objects.Common.Row_Direction.TB : Objects.Common.Row_Direction.BT;
+                            // Nov 27 2023 always show row G first
+                            simpleBlock.Direction = Objects.Common.Row_Direction.BT;
                             simpleBlock.MaxTier = Convert.ToInt32(hashBlock["maxTier"]);
 
                             if (hashBlock["blckBay"] is ArrayList)

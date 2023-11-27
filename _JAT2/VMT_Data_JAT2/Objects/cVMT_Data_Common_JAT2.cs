@@ -2563,7 +2563,7 @@ namespace VMT_Data_JAT2.Objects
                 totalCont = String.Empty;
                 IsVirtual = false;
                 isBolBlck = true;
-                Direction = Row_Direction.TB;
+                Direction = Row_Direction.BT;
                 MaxTier = 8;
                 DicBay = null;// new SortedDictionary<int, VD_Common_SimpleBayInfo>();
             }
